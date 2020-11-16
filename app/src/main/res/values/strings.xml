@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MeilingFramework</string>
+
+    <string name="network_data_convert_error">返回空数据</string>
+    <string name="network_data_unknown_error">未知的异常</string>
+    <string name="network_error">网络异常</string>
 </resources>

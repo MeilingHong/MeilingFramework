@@ -1,6 +1,8 @@
 package com.meiling.framework.app.base;
 
 import com.meiling.framework.app.mvp.base.server.APIFactory;
+import com.meiling.framework.app.mvp.environment.EvnGetter;
+import com.meiling.framework.common_util.log.Ulog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,16 +16,23 @@ import androidx.multidex.MultiDexApplication;
  */
 public class BaseApplication extends MultiDexApplication {
     private static BaseApplication instances;
+
     @Override
     public void onCreate() {
         super.onCreate();
         instances = this;
+        initLog();
+        initUrlMap();
+    }
+
+    private void initLog(){
+        Ulog.setDEBUG(true);
     }
 
     private void initUrlMap() {
         //多域名配置方式
         Map<String, String> replaceMapping = new HashMap<>();
-        replaceMapping.put("main", "");
+        replaceMapping.put("main", EvnGetter.getMainUrl(this));
         APIFactory.setHostReplaceMapping(replaceMapping);// 配置域名替换规则
     }
 

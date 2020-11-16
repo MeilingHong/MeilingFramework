@@ -5,6 +5,7 @@ import com.meiling.framework.network.api.API;
 import com.meiling.framework.network.config.ApiConfig;
 import com.meiling.framework.network.config.DefaultX509TrustManager;
 import com.meiling.framework.network.convert.gson.GsonFactory;
+import com.meiling.framework.network.convert.string.StringConverterFactory;
 import com.meiling.framework.network.interceptor.HostReplaceInterceptor;
 import com.meiling.framework.network.interceptor.LogInterceptor;
 import com.meiling.framework.network.interceptor.RedirectInterceptor;
@@ -56,7 +57,8 @@ public class APIFactory {
                     setHostnameVerifier(ignoreHostnameVerifier).
                     setConnectionSpec(legacyTls).
                     setRetryStrategy(true).
-                    setConverterFactory( com.meiling.framework.network.convert.gson.GsonConverterFactory.create(GsonFactory.build())).
+                    setConverterFactory( com.meiling.framework.network.convert.gson.GsonConverterFactory.create(GsonFactory.build())).// 使用JSON进行数据转换
+//                    setConverterFactory(new StringConverterFactory()).
                     build();
             api = new API(config);
         } catch (Exception e) {
