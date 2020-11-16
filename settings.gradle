@@ -1,2 +1,3 @@
+include ':component_networkrequest'
 include ':app'
 rootProject.name = "MeilingFramework"
