@@ -1,4 +1,4 @@
-package com.meiling.framework.app.mvp.environment;
+package com.meiling.framework.common_util.environment;
 
 /**
  * Created by marisareimu@126.com on 2020-11-16  10:48
