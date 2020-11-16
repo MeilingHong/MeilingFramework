@@ -13,6 +13,11 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    // com.android.tools.r8.a: Invoke-customs are only supported starting with Android O  如果不指定使用 1.8 的Java编译，将报出签名这个异常
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     buildTypes {
         release {
