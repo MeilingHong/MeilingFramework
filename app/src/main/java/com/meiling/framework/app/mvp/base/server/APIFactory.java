@@ -57,7 +57,9 @@ public class APIFactory {
                     setHostnameVerifier(ignoreHostnameVerifier).
                     setConnectionSpec(legacyTls).
                     setRetryStrategy(true).
-                    setConverterFactory( com.meiling.framework.network.convert.gson.GsonConverterFactory.create(GsonFactory.build())).// 使用JSON进行数据转换
+                    // todo 1、使用Gson进行对象转换
+                    setConverterFactory( com.meiling.framework.network.convert.gson.GsonConverterFactory.create(GsonFactory.build())).// 使用JSON进行数据转换，APIServer 中需要使用实体对象进行接收
+                    // todo 2、使用String进行对象转换
 //                    setConverterFactory(new StringConverterFactory()).
                     build();
             api = new API(config);

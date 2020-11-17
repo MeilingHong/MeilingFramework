@@ -19,8 +19,12 @@ public class AppVersionModel extends MyBaseModel<String> {
         return null;
     }
 
+    // todo 1、使用Gson进行对象转换
     public Observable<BaseBean<VersionEntity>> getAppVersion() {
         return apiServer.getVersion(RequestContentType.JSON);
     }
-
+    // todo 2、使用String进行对象转换
+//    public Observable<String> getAppVersion() {
+//        return apiServer.getVersion(RequestContentType.TEXT);
+//    }
 }

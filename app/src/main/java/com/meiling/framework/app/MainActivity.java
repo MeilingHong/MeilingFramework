@@ -47,7 +47,12 @@ public class MainActivity extends AppCompatActivity implements AppVersionView {
 
     @Override
     public void getAppVersion(VersionEntity result) {
-        Ulog.i("收到版本信息接口返回:"+Gsons.getInstance().toJson(result));
+        Ulog.i("收到版本信息接口返回【Gson】:" + Gsons.getInstance().toJson(result));
+    }
+
+    @Override
+    public void getAppVersion(String result) {
+        Ulog.i("收到版本信息接口返回【String】:" + result);
     }
 
     @Override

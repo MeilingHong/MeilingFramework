@@ -22,6 +22,7 @@ public class AppVersionPresenter extends MyBasePresenter<AppVersionView> {
     }
 
     public void getAppVersion() {
+        // todo 1、使用Gson进行对象转换
         addDisposable(model.getAppVersion(), new MyObserver<BaseBean<VersionEntity>>(getCallback(), true, "", "") {
             @Override
             public void onRequestSuccess(BaseBean<VersionEntity> result) {
@@ -41,6 +42,27 @@ public class AppVersionPresenter extends MyBasePresenter<AppVersionView> {
                 }
             }
         });
-
+        // todo 2、使用String进行转换
+//        addDisposable(model.getAppVersion(), new MyObserver<String>(getCallback(), true, "", "") {
+//            @Override
+//            public void onRequestSuccess(String result) {
+//                if (getCallback() != null) {
+//                    // todo 这里需要再次承担数据转换的职责，将String类型的数据转换成对象【相比Gson类型，在转换上需要多几次，但能够处理的数据类型可以更多】
+//                    getCallback().getAppVersion(result);
+////                    if (result != null && result.getSuccess() != null && result.getSuccess() && result.getData() != null) {
+////                        getCallback().getAppVersion(result.getData());
+////                    } else {
+////                        onRequestError("-408", BaseApplication.getResString(R.string.network_data_convert_error));
+////                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onRequestError(String errorCode, String errorMessage) {
+//                if (getCallback() != null) {
+//                    getCallback().requestFail(1, errorCode, errorMessage);
+//                }
+//            }
+//        });
     }
 }

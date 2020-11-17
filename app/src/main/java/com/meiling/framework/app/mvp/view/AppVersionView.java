@@ -10,4 +10,5 @@ import com.meiling.framework.app.mvp.entity.version.VersionEntity;
 
 public interface AppVersionView extends MyBaseView {
     void getAppVersion(VersionEntity result);
+    void getAppVersion(String result);
 }
