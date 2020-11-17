@@ -35,7 +35,7 @@ public abstract class MyObserver<T> extends DefaultObserver<T> {
         super(view);
         this.isShowLoading = isShowLoading;
         this.mLoadingMsg = loadingMsg;
-        this.mUrlString = urlString;
+        this.mUrlString = urlString;// todo 方便在调用出错（如果正常也需要上报）时配合上报相关信息，方便进行定位
     }
 
     @Override
