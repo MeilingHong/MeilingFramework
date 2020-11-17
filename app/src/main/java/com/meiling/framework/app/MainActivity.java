@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity implements AppVersionView {
             @Override
             public void onClick(View view) {
                 ToastUtil.toastShortCenter(getApplicationContext(), "点击Toast");
-                if (appVersionPresenter != null) {
-                    appVersionPresenter.getAppVersion();
-                }
+//                if (appVersionPresenter != null) {
+//                    appVersionPresenter.getAppVersion();
+//                }
             }
         });
         appVersionPresenter = new AppVersionPresenter(this);
