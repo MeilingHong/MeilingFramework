@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.meiling.framework.app.dialog.CommonHintDialog;
 import com.meiling.framework.app.mvp.entity.version.VersionEntity;
 import com.meiling.framework.app.mvp.presenter.AppVersionPresenter;
 import com.meiling.framework.app.mvp.view.AppVersionView;
 import com.meiling.framework.common_util.gson.Gsons;
 import com.meiling.framework.common_util.log.Ulog;
 import com.meiling.framework.common_util.toast.ToastUtil;
+import com.meiling.framework.dialog.callback.IDialogDismissCallback;
+import com.meiling.framework.dialog.callback.IDialogShowCallback;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements AppVersionView {
 //                if (appVersionPresenter != null) {
 //                    appVersionPresenter.getAppVersion();
 //                }
+                showHintDialog();
             }
         });
         appVersionPresenter = new AppVersionPresenter(this);
@@ -44,6 +48,83 @@ public class MainActivity extends AppCompatActivity implements AppVersionView {
             appVersionPresenter.detachView();
         }
     }
+
+    /*
+     ****************************************************************************************************************
+     * Dialog 显示与使用
+     */
+
+    private CommonHintDialog commonHintDialog;
+    private void showHintDialog() {
+        if (commonHintDialog != null) {// 这个可控制使得Dialog仅显示一个
+            // todo 该类型的Dialog在示例化之后如果调用过show方法，不能再次调用，否则将抛出Fragment已添加过的异常
+            return;
+        }
+        commonHintDialog = new CommonHintDialog();
+        // todo 具体的参数配置，在Dialog的实现类中根据实际需要进行配置
+        commonHintDialog.setDialogConfig(this, new IDialogShowCallback() {
+            @Override
+            public void afterDialogShow() {
+                // todo 该回调方法方便有EditText类型的对话框获取焦点，然后显示输入键盘
+            }
+        }, new IDialogDismissCallback() {
+            @Override
+            public void afterDialogDismiss() {
+                if (commonHintDialog != null) {// todo 对于需要控制不多次显示的Dialog，可以在这里释放对象的引用
+                    commonHintDialog = null;
+                }
+            }
+        });
+        commonHintDialog.setCancelClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        commonHintDialog.setConfirmClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        commonHintDialog.setParams("标题", "内容", "取消", "确定");
+        commonHintDialog.show(getSupportFragmentManager(), "hint");
+    }
+
+    private void showHintMultiDialog() {
+        // todo 该中方式的写法将使得多次点击会显示多个Dialog
+        final CommonHintDialog commonHintDialog = new CommonHintDialog();
+        // todo 具体的参数配置，在Dialog的实现类中根据实际需要进行配置
+        commonHintDialog.setDialogConfig(this, new IDialogShowCallback() {
+            @Override
+            public void afterDialogShow() {
+                // todo 该回调方法方便有EditText类型的对话框获取焦点，然后显示输入键盘
+            }
+        }, new IDialogDismissCallback() {
+            @Override
+            public void afterDialogDismiss() {
+
+            }
+        });
+        commonHintDialog.setCancelClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        commonHintDialog.setConfirmClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        commonHintDialog.setParams("标题", "内容", "取消", "确定");
+        commonHintDialog.show(getSupportFragmentManager(), "hint");
+    }
+
+    /*
+     ****************************************************************************************************************
+     */
 
     @Override
     public void getAppVersion(VersionEntity result) {

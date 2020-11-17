@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/clRootView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_transparent">
+
+    <TextView
+        android:id="@+id/tvContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/bg_round_10_gray_alpha_80"
+        android:gravity="center"
+        android:paddingBottom="10px"
+        android:paddingLeft="26px"
+        android:paddingRight="26px"
+        android:paddingTop="10px"
+        android:text="Hello World!"
+        android:textColor="#ffffff"
+        android:textSize="17sp" />
+
+
+</RelativeLayout>
