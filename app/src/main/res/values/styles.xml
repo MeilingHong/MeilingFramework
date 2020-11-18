@@ -1,10 +1,37 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="CommonActivityTheme_WhiteStatusBar" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <!--Appbar背景色-->
+        <item name="colorPrimary">@color/color_3296fa</item>
+        <!--状态栏颜色-->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!--底部导航栏颜色【实际测试发现并没有效果，证明通用性不行】-->
+        <item name="android:navigationBarColor">@color/color_black</item>
+        <!--页面背景色-->
+        <item name="android:windowBackground">@color/color_white</item>
+        <!--各个控制控件的默认颜色-->
+        <!--<item name="android:colorControlNormal">@color/colorControlNormal</item>-->
+        <!--ToolBar上的Title颜色-->
+        <!--<item name="android:textColorPrimary">@color/textColorPrimary</item>-->
+    </style>
+
+    <style name="CommonActivityTheme_BlackStatusBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <!--Appbar背景色-->
+        <item name="colorPrimary">@color/color_3296fa</item>
+        <!--状态栏颜色-->
+        <item name="colorPrimaryDark">@color/color_black</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--底部导航栏颜色【实际测试发现并没有效果，证明通用性不行】-->
+        <item name="android:navigationBarColor">@color/color_black</item>
+        <!--页面背景色-->
+        <item name="android:windowBackground">@color/color_white</item>
+        <!--各个控制控件的默认颜色-->
+        <!--<item name="android:colorControlNormal">@color/colorControlNormal</item>-->
+        <!--ToolBar上的Title颜色-->
+        <!--<item name="android:textColorPrimary">@color/textColorPrimary</item>-->
     </style>
 
 </resources>

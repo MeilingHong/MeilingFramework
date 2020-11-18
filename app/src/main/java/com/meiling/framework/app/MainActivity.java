@@ -1,6 +1,5 @@
 package com.meiling.framework.app;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -9,24 +8,36 @@ import com.meiling.framework.app.dialog.CommonHintDialog;
 import com.meiling.framework.app.mvp.entity.version.VersionEntity;
 import com.meiling.framework.app.mvp.presenter.AppVersionPresenter;
 import com.meiling.framework.app.mvp.view.AppVersionView;
+import com.meiling.framework.base_activity.BaseActivity;
 import com.meiling.framework.common_util.gson.Gsons;
 import com.meiling.framework.common_util.log.Ulog;
 import com.meiling.framework.common_util.toast.ToastUtil;
 import com.meiling.framework.dialog.callback.IDialogDismissCallback;
 import com.meiling.framework.dialog.callback.IDialogShowCallback;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 
-public class MainActivity extends AppCompatActivity implements AppVersionView {
+public class MainActivity extends BaseActivity implements AppVersionView {
 
     private AppVersionPresenter appVersionPresenter;
     private TextView click;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_main);
+    public void configActivity() {
+        isPortraitMode = true;
+        isFullScreenMode = false;
+        isStatusBarFontColorWhite = false;
+    }
+
+    @Override
+    public int getContentViewLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    public void afterSetContentView(@Nullable Bundle savedInstanceState) {
+        setActivityNavigationBarColor(getResources().getColor(R.color.color_3296fa));// 确实将导航栏背景色修改成了指定的颜色
+
         click = findViewById(R.id.click);
         click.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,6 +50,11 @@ public class MainActivity extends AppCompatActivity implements AppVersionView {
             }
         });
         appVersionPresenter = new AppVersionPresenter(this);
+    }
+
+    @Override
+    public void releaseAfterDestroy() {
+
     }
 
     @Override
@@ -55,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements AppVersionView {
      */
 
     private CommonHintDialog commonHintDialog;
+
     private void showHintDialog() {
         if (commonHintDialog != null) {// 这个可控制使得Dialog仅显示一个
             // todo 该类型的Dialog在示例化之后如果调用过show方法，不能再次调用，否则将抛出Fragment已添加过的异常

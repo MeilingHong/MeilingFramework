@@ -1,7 +1,7 @@
 package com.meiling.framework.common_util.image;
 /**
- * Created by huangzhou@ulord.net on 2020-06-28  09:52
- * project UEvidenceProtect
+ * Created by marisareimu@126.com on 2020-06-28  09:52
+ * project MeilingFramework
  */
 
 import android.graphics.Bitmap;
@@ -15,8 +15,8 @@ import java.net.URLDecoder;
 import androidx.annotation.NonNull;
 
 /**
- * Created by huangzhou@ulord.net on 2020-06-28  09:52
- * project UEvidenceProtect
+ * Created by marisareimu@126.com on 2020-06-28  09:52
+ * project MeilingFramework
  */
 public final class MyImageSource {
 

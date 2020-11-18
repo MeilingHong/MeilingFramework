@@ -1,3 +1,4 @@
+include ':component_base_activity'
 include ':component_dialog'
 include ':component_common_util'
 include ':component_networkrequest'

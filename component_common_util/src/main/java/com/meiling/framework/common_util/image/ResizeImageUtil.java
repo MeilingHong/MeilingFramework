@@ -3,8 +3,8 @@ package com.meiling.framework.common_util.image;
 /**
  *
  *
- * Created by huangzhou@ulord.net on 2020-02-14  10:21
- * project UEvidenceProtect
+ * Created by marisareimu@126.com on 2020-02-14  10:21
+ * project MeilingFramework
  */
 
 public class ResizeImageUtil {

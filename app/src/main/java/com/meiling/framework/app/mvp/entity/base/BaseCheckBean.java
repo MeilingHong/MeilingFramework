@@ -7,7 +7,7 @@ package com.meiling.framework.app.mvp.entity.base;
 import com.meiling.framework.common_util.gson.BeanToString;
 
 /**
- * Created by huangzhou@ulord.net on 2020-11-16  15:47
+ * Created by marisareimu@126.com on 2020-11-16  15:47
  * project MeilingFramework
  */
 public class BaseCheckBean extends BeanToString {
