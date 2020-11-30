@@ -1,9 +1,10 @@
-package com.meiling.framework.app;
+package com.meiling.framework.app.activity;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.meiling.framework.app.R;
 import com.meiling.framework.app.dialog.CommonHintDialog;
 import com.meiling.framework.app.mvp.entity.version.VersionEntity;
 import com.meiling.framework.app.mvp.presenter.AppVersionPresenter;
@@ -15,12 +16,16 @@ import com.meiling.framework.common_util.toast.ToastUtil;
 import com.meiling.framework.dialog.callback.IDialogDismissCallback;
 import com.meiling.framework.dialog.callback.IDialogShowCallback;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import androidx.annotation.Nullable;
 
-public class MainActivity extends BaseActivity implements AppVersionView {
+public class DialogCallActivity extends BaseActivity implements AppVersionView {
 
     private AppVersionPresenter appVersionPresenter;
     private TextView click;
+    private ExecutorService singleThreadPool = Executors.newSingleThreadExecutor();
 
     @Override
     public void configActivity() {
@@ -52,6 +57,8 @@ public class MainActivity extends BaseActivity implements AppVersionView {
         appVersionPresenter = new AppVersionPresenter(this);
     }
 
+    // todo Glide加载图片的问题，对于旧手机，在加载时可能会出现显示混乱的问题【猜测是内存缓存、磁盘缓存满了引起的问题】
+
     @Override
     public void releaseAfterDestroy() {
 
@@ -62,6 +69,10 @@ public class MainActivity extends BaseActivity implements AppVersionView {
         super.onDestroy();
         if (appVersionPresenter != null) {
             appVersionPresenter.detachView();
+        }
+        if(singleThreadPool!=null){
+            singleThreadPool.shutdown();
+            singleThreadPool = null;
         }
     }
 

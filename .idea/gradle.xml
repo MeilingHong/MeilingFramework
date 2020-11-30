@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/component_common_util" />
             <option value="$PROJECT_DIR$/component_dialog" />
             <option value="$PROJECT_DIR$/component_networkrequest" />
+            <option value="$PROJECT_DIR$/component_pay" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
