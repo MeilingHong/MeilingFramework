@@ -1,14 +1,20 @@
 package com.meiling.framework.base_activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.meiling.framework.base_activity.util.statusbar.QMUIStatusBarHelper;
 
@@ -25,10 +31,14 @@ import androidx.appcompat.app.AppCompatActivity;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected boolean isPortraitMode = true;// 默认竖屏显示
-    protected boolean isFullScreenMode = false;// 默认不是全屏
+    protected boolean isFullScreenMode = true;// 默认不是全屏
     protected boolean isStatusBarFontColorWhite = true; // 默认状态栏字体颜色为为白色
     protected boolean isKeepScreenMode = false;// 是否是屏幕保持模式【使得屏幕处于一直常亮的状态】
     protected boolean isBlockBackMode = false;
+    protected boolean isDoubleBackExit = false;
+    protected boolean isTranslucent = true;// 状态栏是否透明
+
+//    private Unbinder unbinder = null;
 
     /**
      * 配置一些Activity显示相关的参数
@@ -45,6 +55,67 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public abstract int getContentViewLayoutId();
 
+    /**
+     * 如有必要，进行页面的恢复
+     *
+     * @param savedInstanceState
+     */
+    public abstract void afterSetContentView(@Nullable Bundle savedInstanceState);
+
+    /**
+     * 页面销毁时释放相应的数据
+     */
+    public abstract void releaseAfterDestroy();
+
+    /**
+     * 子类实现对Presenter类的初始化
+     */
+    public abstract void initPresenter();
+
+    /**
+     * 延迟加载
+     */
+    protected abstract void lasyloadCall();
+
+    /**
+     * 设置无状态栏模式【状态栏不可见】
+     */
+    protected void setConfigNoStatusBarWithBlackFont() {
+        isTranslucent = false;
+        isStatusBarFontColorWhite = false;
+    }
+
+    protected void setConfigNoStatusBarWithWhiteFont() {
+        isTranslucent = false;
+        isStatusBarFontColorWhite = true;
+    }
+
+    /**
+     * 设置状态栏可见，同时标题文字为白色
+     */
+    protected void setConfigHasStatusBarWithWhiteFont() {
+        isTranslucent = true;
+        isStatusBarFontColorWhite = true;
+    }
+
+    /**
+     * 设置状态栏可见，同时标题文字为黑色
+     */
+    protected void setConfigHasStatusBarWithBlackFont() {
+        isTranslucent = true;
+        isStatusBarFontColorWhite = false;
+    }
+
+//    private void initButterKnife() {
+//        unbinder = ButterKnife.bind(this);
+//    }
+//
+//    private void releaseButterKnife() {
+//        if (unbinder != null) {
+//            unbinder.unbind();
+//        }
+//    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,24 +123,28 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (getContentViewLayoutId() == 0) {
             throw new RuntimeException("Invalid activity layout resource id!");
         }
-        applyConfiguration();
+        applyConfiguration();// 应用设置的配置信息
         setContentView(getContentViewLayoutId());
+//        initButterKnife();
         afterSetContentView(savedInstanceState);
+        initPresenter();
     }
-
-    public abstract void afterSetContentView(@Nullable Bundle savedInstanceState);
 
     /**
      * 应用配置信息，使得配置生效
      */
     private void applyConfiguration() {
+        firstFocusCount = 1;
         // todo 设置屏幕显示方向
         setRequestedOrientation(isPortraitMode ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         // todo 设置屏幕是否全屏，设置状态栏字体颜色
         getWindow().getDecorView().setSystemUiVisibility(
-                isFullScreenMode && isStatusBarFontColorWhite ? View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE :
-                        isFullScreenMode && !isStatusBarFontColorWhite ? View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR :
+                isFullScreenMode && isStatusBarFontColorWhite ?
+                        (isTranslucent ? View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN :// todo 该参数会使得状态栏可见
+                                View.SYSTEM_UI_FLAG_FULLSCREEN) // todo 该参数会使得状态栏不可见-------------从而使得状态栏根据 Activity页面的需求进行变化
+                                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE :
+                        isFullScreenMode && !isStatusBarFontColorWhite ? (isTranslucent ? View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN : View.SYSTEM_UI_FLAG_FULLSCREEN) | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR :
                                 !isFullScreenMode && isStatusBarFontColorWhite ? View.SYSTEM_UI_FLAG_LAYOUT_STABLE : View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         if (isFullScreenMode) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//
@@ -87,8 +162,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 设置状态栏透明，状态栏字体颜色
+     *
+     * @param isWhite
+     */
     protected void setStatusFontColor(boolean isWhite) {
-        QMUIStatusBarHelper.translucent(this);
+        if (isTranslucent) {
+            QMUIStatusBarHelper.translucent(this);
+        }
         if (isWhite) {
             QMUIStatusBarHelper.setStatusBarDarkMode(this);
         } else {
@@ -108,11 +190,24 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public abstract void releaseAfterDestroy();
+    /*
+     *********************************************************************************************************
+     * todo 等页面实例化完成后，进行延迟调用
+     */
+
+    private int firstFocusCount = 1;
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (firstFocusCount < 2) {
+            firstFocusCount++;
+            lasyloadCall();
+        }
+    }
 
     /*
      *********************************************************************************************************
-     * todo 释放Handler的信息，避免造成内存泄漏
      */
 
     /**
@@ -140,16 +235,30 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /*
      *********************************************************************************************************
+     */
+
+//    /**
+//     * 释放presenter对象
+//     *
+//     * @param presenter
+//     */
+//    public void releasePresenter(MyBasePresenter presenter) {
+//        if (presenter != null) {
+//            presenter.detachView();
+//            presenter = null;
+//        }
+//    }
+    /*
+     *********************************************************************************************************
      * todo 打开其他页面的的方法，可通过重写来覆盖实现
      */
 
     protected void setActivitySwitchAnimation() {
         //设置页面进出动画
-        overridePendingTransition(R.anim.up_in, R.anim.up_out);//往上进入，往上出去
+        overridePendingTransition(com.meiling.framework.base_activity.R.anim.up_in, com.meiling.framework.base_activity.R.anim.up_out);//往上进入，往上出去
     }
 
     public void skipIntent(Bundle bundle, @NonNull Class<?> clz) {
-        setActivitySwitchAnimation();
         //设置页面进出动画
         skipIntent(bundle, clz, -1);
     }
@@ -167,6 +276,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (bundle != null) {
             intent.putExtras(bundle);
         }
+        // 设置页面切换动画
         setActivitySwitchAnimation();
         //是否进行有返回值得跳转
         if (requestCode != -1) {
@@ -179,6 +289,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     /*
      *********************************************************************************************************
      */
+    private long firstTime = 0; // 双击退出
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -186,11 +297,66 @@ public abstract class BaseActivity extends AppCompatActivity {
             case KeyEvent.KEYCODE_BACK:
                 if (isBlockBackMode) {// todo 屏蔽系统返回按钮的响应，避免通过按系统返回键关闭Activity的情况
                     return true;
+                } else {
+                    if (isDoubleBackExit) {
+                        long secondTime = System.currentTimeMillis();
+                        if (secondTime - firstTime > 2000) {
+//                            showHintCenterOrderMsg(getString(R.string.double_click_quit));
+                            firstTime = secondTime;//更新firstTime
+                            return true;
+                        } else {
+                            //两次按键小于2秒时，退出应用
+                            finish();
+                            System.exit(0);
+                        }
+                    }
                 }
                 break;
         }
         return super.onKeyUp(keyCode, event);
     }
+
+//    public void showHintCenterOrderMsg(String msg) {
+//        try {
+//            if (!TextUtils.isEmpty(msg)) {
+//                View view = LayoutInflater.from(this).inflate(R.layout.toast_center, null);
+//                TextView tvToast = view.findViewById(R.id.tvToast);
+//                tvToast.setText(msg);
+//                ToastUtil.toastShortOrder(this, view, Gravity.CENTER);
+//            }
+//        } catch (Exception e) {
+//            CrashReportUtil.report(Ulog.getThrowableStackTrace(e), e);
+//            Looper.prepare();
+//            if (!TextUtils.isEmpty(msg)) {
+//                View view = LayoutInflater.from(this).inflate(R.layout.toast_center, null);
+//                TextView tvToast = view.findViewById(R.id.tvToast);
+//                tvToast.setText(msg);
+//                ToastUtil.toastShortOrder(this, view, Gravity.CENTER);
+//            }
+//            Looper.loop();
+//        }
+//    }
+//
+//    public void showHintCenterOrderMsgRound100(String msg) {
+//        try {
+//            if (!TextUtils.isEmpty(msg)) {
+//                View view = LayoutInflater.from(this).inflate(R.layout.toast_round_100_center, null);
+//                TextView tvToast = view.findViewById(R.id.tvToast);
+//                tvToast.setText(msg);
+//                ToastUtil.toastShortOrder(this, view, Gravity.CENTER);
+//            }
+//        } catch (Exception e) {
+//            CrashReportUtil.report(Ulog.getThrowableStackTrace(e), e);
+//            Looper.prepare();
+//            if (!TextUtils.isEmpty(msg)) {
+//                View view = LayoutInflater.from(this).inflate(R.layout.toast_round_100_center, null);
+//                TextView tvToast = view.findViewById(R.id.tvToast);
+//                tvToast.setText(msg);
+//                ToastUtil.toastShortOrder(this, view, Gravity.CENTER);
+//            }
+//            Looper.loop();
+//        }
+//    }
 
     @Override
     protected void onDestroy() {
@@ -201,5 +367,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         // todo 提供一个需要释放对象的方法
         releaseAfterDestroy();
+
+//        releaseButterKnife();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        Ulog.e("BaseActivity：" + (resultCode == Activity.RESULT_OK) + "-----" + requestCode + "-----" + resultCode + "-----" + this.getClass().getName());
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

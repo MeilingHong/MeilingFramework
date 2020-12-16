@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.meiling.framework.app.R;
-import com.meiling.framework.app.activity.ObsCheckActivity;
 import com.meiling.framework.app.dialog.CommonHintDialog;
 import com.meiling.framework.app.mvp.entity.version.VersionEntity;
 import com.meiling.framework.app.mvp.presenter.AppVersionPresenter;
@@ -31,12 +30,13 @@ public class MainActivity extends BaseActivity implements AppVersionView {
         isFullScreenMode = false;
         isStatusBarFontColorWhite = false;
     }
+
     /*
 
       1、线程池，在提交任务上，比异步任务好，但是，在任务执行顺序，与执行时机上我发进行管理，在数据的线程切换上也需要自己进行管理；
       2、异步任务在单任务执行上
      */
-    private AsyncTask<Void,Void,Void> asyncTask = new AsyncTask<Void, Void, Void>() {
+    private AsyncTask<Void, Void, Void> asyncTask = new AsyncTask<Void, Void, Void>() {
         @Override
         protected Void doInBackground(Void... voids) {
             return null;
@@ -71,6 +71,16 @@ public class MainActivity extends BaseActivity implements AppVersionView {
 
     @Override
     public void releaseAfterDestroy() {
+
+    }
+
+    @Override
+    public void initPresenter() {
+
+    }
+
+    @Override
+    protected void lasyloadCall() {
 
     }
 

@@ -55,6 +55,16 @@ public class DialogCallActivity extends BaseActivity {
     }
 
     @Override
+    public void initPresenter() {
+
+    }
+
+    @Override
+    protected void lasyloadCall() {
+
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (singleThreadPool != null) {

@@ -59,22 +59,30 @@ public class PresenterCallActivity extends BaseActivity implements AppVersionVie
                 }
             }
         });
-        appVersionPresenter = new AppVersionPresenter(this);
     }
 
     // todo Glide加载图片的问题，对于旧手机，在加载时可能会出现显示混乱的问题【猜测是内存缓存、磁盘缓存满了引起的问题】
 
     @Override
     public void releaseAfterDestroy() {
+        if (appVersionPresenter != null) {
+            appVersionPresenter.detachView();
+        }
+    }
+
+    @Override
+    public void initPresenter() {
+        appVersionPresenter = new AppVersionPresenter(this);
+    }
+
+    @Override
+    protected void lasyloadCall() {
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (appVersionPresenter != null) {
-            appVersionPresenter.detachView();
-        }
     }
 
     /*

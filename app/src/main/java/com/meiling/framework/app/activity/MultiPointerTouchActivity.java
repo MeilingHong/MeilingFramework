@@ -103,6 +103,16 @@ public class MultiPointerTouchActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void initPresenter() {
+
+    }
+
+    @Override
+    protected void lasyloadCall() {
+
+    }
+
     /*
      ****************************************************************************************************************
      */

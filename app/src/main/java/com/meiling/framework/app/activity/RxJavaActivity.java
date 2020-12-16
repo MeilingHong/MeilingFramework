@@ -70,15 +70,24 @@ public class RxJavaActivity extends BaseActivity {
 
                     }
                 }).
-                        flatMap(new Function<String,         // 输入参数类型---上一个方法的返回值类型
-                                ObservableSource<Object>>() {// 返回值类型
+                        /**
+                         * todo 1、该方法比较适合需要连续调用的情况【链式调用，如果其中一个出错，则通过抛出异常来终止整个调用链路】
+                         *  否则通过返回值传递给下一个调用环节
+                         */
+                        // 输入参数类型---上一个方法的返回值类型   // 返回值类型
+                flatMap(new Function<String                    ,ObservableSource<Object>>() {
                     @Override
                     public ObservableSource<Object> apply(String s) throws Exception {
+                        // 可通过这个方法进行数据类型的转换
                         return null;
                     }
                 }).
                         subscribeOn(Schedulers.io()).// 订阅执行在IO线程中
                         observeOn(AndroidSchedulers.mainThread()).// 观察处于UI主线程中
+                        /**
+                         * 1、观察者进行订阅，在执行到对应方法时，回调对应的方法
+                         *  接收基于推送通知的机制
+                         */
                         subscribe(new Observer<Object>() { // 订阅回调
                             @Override
                             public void onSubscribe(Disposable d) {
@@ -108,6 +117,16 @@ public class RxJavaActivity extends BaseActivity {
 
     @Override
     public void releaseAfterDestroy() {
+
+    }
+
+    @Override
+    public void initPresenter() {
+
+    }
+
+    @Override
+    protected void lasyloadCall() {
 
     }
 

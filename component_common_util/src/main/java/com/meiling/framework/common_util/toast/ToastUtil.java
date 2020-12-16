@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 public class ToastUtil {
+    // todo 实际接入时发现，编译后，Activity中无法引用到这个类
     public static void toastShort(Context context, @NonNull String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
