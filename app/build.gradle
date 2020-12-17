@@ -84,4 +84,11 @@ dependencies {
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
     implementation 'com.tencent.bugly:nativecrashreport:3.7.1'
     //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
+
+    // LeakCanary  内存泄漏分析
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
+//    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:2.5' //Failed to resolve: com.squareup.leakcanary:leakcanary-android-no-op:2.5
+//    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:2.5'
+//    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'// 以下两个1.5版本的可以使用
+//    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }
