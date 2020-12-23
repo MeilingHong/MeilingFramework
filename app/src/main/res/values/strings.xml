@@ -7,4 +7,18 @@
     <string name="hint">提示</string>
     <string name="cancel">取消</string>
     <string name="confirm">确定</string>
+
+    <string name="permission_apply">权限申请</string>
+    <string name="permission_dialog_msg_storage">请打开存储访问权限，否则无法使用服务！</string>
+    <string name="permission_dialog_msg_callphone">请打开拨打电话权限，否则无法使用服务！</string>
+    <string name="permission_dialog_msg_camera_storage">请打开相机访问权限以及存储访问权限，否则无法使用服务！</string>
+    <string name="permission_dialog_msg_location">请打开地理位置访问权限，否则无法使用服务！</string>
+    <string name="permission_dialog_msg_camera_storage_location_info">请打开相机、存储、地理位置和手机信息访问权限，否则无法使用服务！</string>
+    <string name="permission_dialog_msg_camera_storage_location_voice_info">请打开相机、存储、录音、地理位置和手机信息访问权限，否则无法使用服务！</string>
+    <string name="permission_dialog_msg_storage_location_info">请打开存储、地理位置和手机信息访问权限，否则无法使用服务！</string>
+    <string name="permission_dialog_msg_storage_location_voice_info">请打开存储、录音、地理位置和手机信息访问权限，否则无法使用服务！</string>
+    <string name="permission_dialog_msg_storage_location_voice_info_window">请打开存储、录音、悬浮窗、地理位置和手机信息访问权限，否则无法使用服务！</string>
+    <string name="permission_dialog_msg_storage_and_install">请打开存储访问权限以及应用安装权限，否则无法进行更新！</string>
+    <string name="go_setting">去设置</string>
+    <string name="not_setting_now">暂不设置</string>
 </resources>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color_ffffff">
+
+    <include
+        android:id="@+id/componentActionBar"
+        layout="@layout/component_action_bar_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp05"
+        android:background="@color/color_div_line_f1"
+        android:layout_below="@id/componentActionBar"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/componentActionBar"
+        android:layout_marginTop="@dimen/dp05"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/callPhone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp46"
+            android:gravity="center"
+            android:text="電話"
+            android:textSize="@dimen/sp16"
+            android:textColor="@color/color_333333"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp05"
+            android:background="@color/color_div_line_f1"
+            />
+        <TextView
+            android:id="@+id/sendMail"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp46"
+            android:gravity="center"
+            android:text="发邮件"
+            android:textSize="@dimen/sp16"
+            android:textColor="@color/color_333333"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp05"
+            android:background="@color/color_div_line_f1"
+            />
+        <TextView
+            android:id="@+id/netExplorer"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp46"
+            android:gravity="center"
+            android:text="浏览网址"
+            android:textSize="@dimen/sp16"
+            android:textColor="@color/color_333333"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp05"
+            android:background="@color/color_div_line_f1"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

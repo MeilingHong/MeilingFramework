@@ -3,7 +3,7 @@
     <style name="CommonActivityTheme_WhiteStatusBar" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <!--Appbar背景色-->
-        <item name="colorPrimary">@color/color_3296fa</item>
+        <item name="colorPrimary">@color/color_main</item>
         <!--状态栏颜色-->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -20,7 +20,7 @@
     <style name="CommonActivityTheme_BlackStatusBar" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <!--Appbar背景色-->
-        <item name="colorPrimary">@color/color_3296fa</item>
+        <item name="colorPrimary">@color/color_main</item>
         <!--状态栏颜色-->
         <item name="colorPrimaryDark">@color/color_black</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -33,5 +33,22 @@
         <!--ToolBar上的Title颜色-->
         <!--<item name="android:textColorPrimary">@color/textColorPrimary</item>-->
     </style>
+
+    <!-- 横向进度条 -->
+    <style name="ProgressBar_Mini" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:maxHeight">6dip</item>
+        <item name="android:minHeight">6dip</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">
+            @android:drawable/progress_indeterminate_horizontal
+        </item>
+        <item name="android:progressDrawable">@drawable/progressbar_mini</item>
+    </style>
+
+    <style name="popupAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/in_fade</item>
+        <item name="android:windowExitAnimation">@anim/out_fade</item>
+    </style>
+
 
 </resources>

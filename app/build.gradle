@@ -91,4 +91,22 @@ dependencies {
 //    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:2.5'
 //    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'// 以下两个1.5版本的可以使用
 //    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
+    // eventbus
+    implementation 'org.greenrobot:eventbus:3.1.1'
+
+    //權限
+    implementation 'com.hjq:xxpermissions:5.3'
+
+    // 注解
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+
+    // listView 组件（自带加载更多）
+    implementation 'com.yanzhenjie:recyclerview-swipe:1.1.4'
+    //adapter 组件
+    implementation 'com.github.chaychan:MultipleItemRvAdapter:1.0.3'
+
+    //图片加载工具
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
 }

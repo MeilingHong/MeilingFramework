@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.meiling.framework.app">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-
     <application
         android:name=".base.BaseApplication"
         android:allowBackup="true"
@@ -12,7 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/CommonActivityTheme_WhiteStatusBar">
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.MainActivity"
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,13 +21,32 @@
         </activity>
         <activity
             android:name=".activity.ObsCheckActivity"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activity.DialogCallActivity"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activity.MultiPointerTouchActivity"
-            />
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.a_test.PopupDialogCallActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.meiling.framework.app.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+        <!-- 替换Glide对应的实现，使得加载进度（含加载成功、加载失败）能够被观测到 -->
+        <meta-data
+            android:name="com.meiling.framework.app.utils.glide.MyGlideModule"
+            android:value="GlideModule" />
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

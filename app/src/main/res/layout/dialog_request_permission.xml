@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lLayout_bg"
+    android:layout_width="276dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="30dp"
+    android:background="@drawable/bg_round_8_color_ffffff"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/hintIcon"
+        android:layout_width="@dimen/dp72"
+        android:layout_height="@dimen/dp72"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp17"
+        android:src="@drawable/permission_dialog_address"
+        />
+
+    <TextView
+        android:id="@+id/hintMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp47"
+        android:layout_marginRight="@dimen/dp47"
+        android:layout_marginTop="@dimen/dp3"
+        android:layout_marginBottom="@dimen/dp28"
+        android:gravity="center"
+        android:text="1111111"
+        android:textColor="@color/color_333333"
+        android:textSize="@dimen/sp13" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bg_color_f5f5f5" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="0dp"
+            android:layout_height="43dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/not_setting_now"
+            android:textColor="@color/color_b5b9c4"
+            android:textSize="@dimen/sp16" />
+
+        <ImageView
+            android:id="@+id/img_line"
+            android:layout_width="1dp"
+            android:layout_height="43dp"
+            android:background="@color/bg_color_f5f5f5" />
+
+        <TextView
+            android:id="@+id/confirm"
+            android:layout_width="0dp"
+            android:layout_height="43dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/confirm"
+            android:textColor="@color/color_main"
+            android:textSize="@dimen/sp16" />
+    </LinearLayout>
+
+</LinearLayout>

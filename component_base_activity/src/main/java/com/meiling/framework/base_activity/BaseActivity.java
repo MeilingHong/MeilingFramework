@@ -158,13 +158,32 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         // todo 设置底部导航栏的颜色
         if (navigatorBarColor != -1) {
-            getWindow().setNavigationBarColor(navigatorBarColor);// 可根据需要自定义
+            setNavigationBarColor(navigatorBarColor);// 可根据需要自定义
         }
 
         // todo 是否保持该页面的屏幕处于常亮状态
         if (isKeepScreenMode) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
+    }
+
+    protected void setStatusBarInvisible() {
+        setStatusFontColor(false);
+        // todo 部分手机底部虚拟按键背景色不是黑色
+        setNavigationBarColor(Color.BLACK);
+    }
+
+    protected void setStatusBarVisible() {
+        setStatusFontColor(isStatusBarFontColorWhite);
+        if (navigatorBarColor != -1) {
+            setNavigationBarColor(navigatorBarColor);
+        } else {
+            setNavigationBarColor(Color.WHITE);
+        }
+    }
+
+    protected void setNavigationBarColor(@ColorInt int color){
+        getWindow().setNavigationBarColor(color);
     }
 
     /**

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_000000_a30"
+    >
+
+    <com.meiling.framework.app.widget.status.StatusLayout
+        android:id="@+id/slComponentActionBarStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/ivComponentActionBarBack"
+        android:layout_width="@dimen/dp40"
+        android:layout_height="@dimen/dp44"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/slComponentActionBarStatus"
+        android:paddingBottom="@dimen/dp12"
+        android:paddingStart="@dimen/dp16"
+        android:paddingEnd="@dimen/dp4"
+        android:paddingTop="@dimen/dp12"
+        android:src="@drawable/back_white" />
+
+    <TextView
+        android:id="@+id/tvComponentActionBarTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp44"
+        android:layout_below="@id/slComponentActionBarStatus"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="@dimen/dp48"
+        android:layout_marginStart="@dimen/dp48"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/color_303030"
+        android:textSize="@dimen/sp16" />
+
+    <TextView
+        android:id="@+id/tvComponentActionBarRightTextMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp44"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/slComponentActionBarStatus"
+        android:layout_marginEnd="@dimen/dp14"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/color_7da7d2"
+        android:textSize="@dimen/sp16"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/ivComponentActionBarRightImageMenu"
+        android:layout_width="@dimen/dp44"
+        android:layout_height="@dimen/dp44"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/slComponentActionBarStatus"
+        android:layout_marginEnd="@dimen/dp4"
+        android:padding="@dimen/dp12"
+        android:visibility="gone" />
+
+</RelativeLayout>

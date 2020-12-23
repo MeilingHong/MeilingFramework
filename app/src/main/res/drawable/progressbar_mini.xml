@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- 背景色 -->
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="0dip" />
+            <gradient
+                android:angle="270"
+                android:centerY="0.75"
+                android:endColor="#f3f4f6"
+                android:startColor="#f3f4f6" />
+        </shape>
+    </item>
+
+
+    <!-- 第二进度条（播放，缓冲使用） -->
+    <item android:id="@android:id/secondaryProgress">
+        <clip>
+            <shape>
+                <corners android:radius="0dip" />
+                <gradient
+                    android:angle="270"
+                    android:centerY="0.75"
+                    android:endColor="#d6d6d6"
+                    android:startColor="#d6d6d6" />
+            </shape>
+        </clip>
+    </item>
+
+
+    <!-- 多数情况下使用的进度条的颜色在这里变更 -->
+    <!--
+        红
+        android:endColor="#ffff4444"
+        android:startColor="#55ff4444"
+        蓝
+        android:endColor="#165CBC"
+        android:startColor="#85B0E9"  -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="0dip" />
+                <gradient
+                    android:angle="270"
+                    android:centerY="0.75"
+                    android:endColor="#3296fa"
+                    android:startColor="#3296fa" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>
