@@ -21,4 +21,9 @@
     <string name="permission_dialog_msg_storage_and_install">请打开存储访问权限以及应用安装权限，否则无法进行更新！</string>
     <string name="go_setting">去设置</string>
     <string name="not_setting_now">暂不设置</string>
+
+    <string name="size_unit_byte">%dB</string>
+    <string name="size_unit_kb_2">%.2fKB</string>
+    <string name="size_unit_mb_2">%.2fMB</string>
+    <string name="size_unit_gb_2">%.2fGB</string>
 </resources>
