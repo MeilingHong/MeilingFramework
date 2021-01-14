@@ -37,7 +37,7 @@ public class ObsCheckActivity extends BaseActivity {
 
     @Override
     public void afterSetContentView(@Nullable Bundle savedInstanceState) {
-        setActivityNavigationBarColor(getResources().getColor(R.color.color_3296fa));// 确实将导航栏背景色修改成了指定的颜色
+        setActivityNavigationBarColor(getResources().getColor(R.color.color_main));// 确实将导航栏背景色修改成了指定的颜色
 
         click = findViewById(R.id.click);
         click.setOnClickListener(new View.OnClickListener() {
