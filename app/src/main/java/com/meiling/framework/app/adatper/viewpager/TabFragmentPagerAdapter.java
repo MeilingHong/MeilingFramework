@@ -2,6 +2,8 @@ package com.meiling.framework.app.adatper.viewpager;
 
 import android.view.ViewGroup;
 
+import com.meiling.framework.base_activity.BaseFragment;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -15,9 +17,9 @@ import androidx.fragment.app.FragmentPagerAdapter;
  */
 public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
     private FragmentManager mfragmentManager;
-    private List<Fragment> mlist;
+    private List<BaseFragment> mlist;
 
-    public TabFragmentPagerAdapter(FragmentManager fm, List<Fragment> list) {
+    public TabFragmentPagerAdapter(FragmentManager fm, List<BaseFragment> list) {
         super(fm);
         this.mlist = list;
     }

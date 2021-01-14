@@ -35,20 +35,26 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    signingConfigs {
-        release {
-            keyAlias 'uload'
-            keyPassword '123456'
-            storeFile file('Uload.jks')
-            storePassword '123456'
-        }
-        debug {
-            keyAlias 'uload'
-            keyPassword '123456'
-            storeFile file('Uload.jks')
-            storePassword '123456'
-        }
-    }
+//    signingConfigs {
+//        release {
+//            keyAlias 'abc'
+//            keyPassword '123456'
+//            storeFile file('abc.jks')
+//            storePassword '123456'
+//        }
+//        debug {
+//            keyAlias 'abc'
+//            keyPassword '123456'
+//            storeFile file('abc.jks')
+//            storePassword '123456'
+//        }
+//    }
+}
+
+// 处理duplicate class org.jetbrains 的问题
+configurations {
+    cleanedAnnotations
+    compile.exclude group: 'org.jetbrains' , module:'annotations'
 }
 
 dependencies {
