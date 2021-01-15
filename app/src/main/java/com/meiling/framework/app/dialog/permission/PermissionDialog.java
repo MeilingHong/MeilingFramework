@@ -50,6 +50,11 @@ public class PermissionDialog extends BaseFragmentDialog implements View.OnClick
                 msg.setText(getActivity().getString(R.string.permission_dialog_msg_storage));
                 break;
             }
+            case TYEE_CALLPHONE: {
+                hintIcon.setImageResource(R.drawable.permission_dialog_address);
+                msg.setText(getActivity().getString(R.string.permission_dialog_msg_callphone));
+                break;
+            }
             case TYPE_LOCATION: {
                 hintIcon.setImageResource(R.drawable.permission_dialog_address);
                 msg.setText(getActivity().getString(R.string.permission_dialog_msg_location));

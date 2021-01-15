@@ -44,7 +44,7 @@ public class GlideUtil {
      * @param progressListener
      * @param imageView
      */
-    public static void loadImage(Context mContext, String imagePath, ProgressListener progressListener, ImageView imageView) {
+    public static void loadNetImage(Context mContext, String imagePath, ProgressListener progressListener, ImageView imageView) {
         if (mContext == null || TextUtils.isEmpty(imagePath)) {
             Ulog.e("无效的图片加载参数，请确认参数的有效性!");
             return;
@@ -85,5 +85,17 @@ public class GlideUtil {
                         }
                     }
                 });
+    }
+
+    public static void loadLocalImage(Context mContext, String imagePath, ImageView imageView) {
+        if (mContext == null || TextUtils.isEmpty(imagePath)) {
+            Ulog.e("无效的图片加载参数，请确认参数的有效性!");
+            return;
+        }
+        // todo 需要严格注意的点，使用Glide加载图片的View不能够使用setTag方法【源码内部逻辑使用了setTag，否则将造成异常】
+        Glide.with(mContext)
+                .load(imagePath)
+                .dontAnimate()
+                .into(imageView);
     }
 }

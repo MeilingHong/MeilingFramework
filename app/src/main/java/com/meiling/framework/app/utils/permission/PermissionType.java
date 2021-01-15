@@ -7,6 +7,7 @@ package com.meiling.framework.app.utils.permission;
 
 public enum PermissionType {
     TYEE_STORAGE,// 仅存储权限
+    TYEE_CALLPHONE,// 仅存储权限
     TYPE_CAMERA_STORAGE,// 摄像头与存储权限
     TYPE_LOCATION,// 仅定位信息
     TYPE_CAMERA_STORAGE_LOCATION_INFO,// 照相【摄像头、存储、定位、设备信息】

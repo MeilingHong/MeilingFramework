@@ -24,7 +24,7 @@ public class DirectoryUtil {
         if (sdCardExist) {
             if (Build.VERSION.SDK_INT >= 29) {
                 //Android10之后-- 避免Android 10以后无法创建文件
-                return mContext.getExternalFilesDir(null).getPath();
+                return mContext.getExternalFilesDir(null).getPath();// 这样拿到的文件路径其实是不需要存储权限的
             } else {
                 return Environment.getExternalStorageDirectory().getPath();
             }

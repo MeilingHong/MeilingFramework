@@ -91,6 +91,11 @@ public class PermissionHelper {
                         Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE});
                 break;
             }
+            case TYEE_CALLPHONE:{
+                permission = Arrays.asList(new String[]{
+                        Manifest.permission.CALL_PHONE});
+                break;
+            }
             case TYPE_LOCATION: {
                 permission = Arrays.asList(new String[]{
                         Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION});
