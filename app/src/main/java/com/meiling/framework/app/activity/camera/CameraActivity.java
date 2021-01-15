@@ -7,6 +7,7 @@ package com.meiling.framework.app.activity.camera;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -186,6 +187,17 @@ public class CameraActivity extends BaseActivity {
 
     private void openTimePicker() {
         if (mDialogTime == null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.clear();
+            calendar.set(Calendar.YEAR,1990);
+            calendar.set(Calendar.MONTH,0);
+            calendar.set(Calendar.DAY_OF_MONTH,1);
+            long minTimestamp = calendar.getTimeInMillis();
+            calendar.clear();
+            calendar.set(Calendar.YEAR,2100);
+            calendar.set(Calendar.MONTH,12);
+            calendar.set(Calendar.DAY_OF_MONTH,31);
+            long maxTimestamp = calendar.getTimeInMillis();
             mDialogTime = new TimePickerDialog.Builder()
                     .setType(Type.YEAR_MONTH)
                     .setThemeColor(getResources().getColor(R.color.white))
@@ -194,6 +206,11 @@ public class CameraActivity extends BaseActivity {
                     .setSureTextColor(R.color.color_06c1ae)
                     .setToolBarTextColor(R.color.color_999999)
                     .setCurrentMillseconds(currentTime)// todo 保证显示的是最后选中的时间--需要在选中后进行更新
+                    .setCyclic(false)// 设置滚动不可循环
+                    .setMinMillseconds(minTimestamp)// 设置起始时间
+                    .setMaxMillseconds(maxTimestamp)// 设置终止时间
+                    .setWheelItemTextNormalColor(Color.parseColor("#999999"))// 未选中的文字颜色
+                    .setWheelItemTextSelectorColor(Color.parseColor("#3296fa"))// 选中的文字颜色
                     .setCallBack(new OnDateSetListener() {
                         @Override
                         public void onDateSet(TimePickerDialog timePickerView, long millseconds) {

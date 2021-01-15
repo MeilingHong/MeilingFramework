@@ -17,6 +17,7 @@ public class PickerConfig {
 
     public String mCancelString = DefaultConfig.CANCEL;
     public int mSureTextColor = DefaultConfig.COLOR;
+    public int mCancelTextColor = DefaultConfig.COLOR;
     public String mSureString = DefaultConfig.SURE;
     public String mTitleString = DefaultConfig.TITLE;
     public int mToolBarTVColor = DefaultConfig.TOOLBAR_TV_COLOR;

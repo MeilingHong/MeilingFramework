@@ -98,8 +98,8 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         sure.setText(mPickerConfig.mSureString);
 //        toolbar.setBackgroundColor(mPickerConfig.mThemeColor);
 //        title.setTextColor(mPickerConfig.mToolBarTVColor);
-//        cancel.setTextColor(mPickerConfig.mSureTextColor);
-//        sure.setTextColor(mPickerConfig.mSureTextColor);
+        cancel.setTextColor(mPickerConfig.mCancelTextColor);
+        sure.setTextColor(mPickerConfig.mSureTextColor);
         mTimeWheel = new TimeWheel(view, mPickerConfig);
         return view;
     }
@@ -212,6 +212,11 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
 
         public Builder setSureTextColor(int color) {
             mPickerConfig.mSureTextColor = color;
+            return this;
+        }
+
+        public Builder setCancelTextColor(int color) {
+            mPickerConfig.mCancelTextColor = color;
             return this;
         }
 
