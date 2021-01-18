@@ -5,10 +5,14 @@ package com.meiling.framework.app.activity.camera;
  */
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -20,21 +24,29 @@ import android.widget.TextView;
 
 import com.meiling.framework.app.R;
 import com.meiling.framework.app.base.BaseApplication;
+import com.meiling.framework.app.base.IntentParameterKeys;
 import com.meiling.framework.app.utils.bugly.CrashReportUtil;
 import com.meiling.framework.app.utils.directory.DirectoryUtil;
 import com.meiling.framework.app.utils.permission.PermissionHelper;
 import com.meiling.framework.app.utils.permission.PermissionType;
+import com.meiling.framework.app.utils.thread.ThreadPoolUtil;
 import com.meiling.framework.base_activity.BaseActivity;
 import com.meiling.framework.base_activity.util.info.CameraCheckUtil;
 import com.meiling.framework.common_util.datahandle.TimeFormat;
 import com.meiling.framework.common_util.datahandle.UnitExchangeUtil;
+import com.meiling.framework.common_util.image.BitmapCameraUtil;
 import com.meiling.framework.common_util.log.Ulog;
 import com.meiling.framework.common_util.toast.ToastUtil;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class Camera1Activity extends BaseActivity {
@@ -110,7 +122,7 @@ public class Camera1Activity extends BaseActivity {
         doShot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                takePhoto();
             }
         });
 
@@ -120,6 +132,7 @@ public class Camera1Activity extends BaseActivity {
     @Override
     public void releaseAfterDestroy() {
         releaseCameraResource();
+        removeHandlerMessagesAndRelease(mHandler);
     }
 
     @Override
@@ -130,6 +143,134 @@ public class Camera1Activity extends BaseActivity {
     @Override
     protected void lasyloadCall() {
 
+    }
+    /*
+     ************************************************************************************************************************************************
+     */
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 1000: {
+                    Intent intent = new Intent();
+                    intent.putExtra(IntentParameterKeys.image_path, cameraImagePath);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                    break;
+                }
+                case 1001: {
+                    Ulog.e("失败---1");
+                    break;
+                }
+                case 1002: {
+                    Ulog.e("失败---2");
+                    break;
+                }
+                case 1003: {
+                    Ulog.e("完成---3");
+                    break;
+                }
+            }
+        }
+    };
+
+    private Camera.PictureCallback mPictureJpegCallback = new Camera.PictureCallback() {
+        @Override
+        public void onPictureTaken(final byte[] data, Camera camera) {
+            if (data == null || data.length < 1) {
+                Ulog.d("Jpeg未获取到照片数据!");
+                return;
+            }
+            ThreadPoolUtil.getInstance().submit(new Runnable() {
+                @Override
+                public void run() {
+                    FileOutputStream fos = null;
+                    try {
+                        String dir = DirectoryUtil.getExternalDir(Camera1Activity.this);
+                        File dirFile = new File(dir);
+                        if (!dirFile.exists()) {
+                            dirFile.mkdirs();
+                        }
+                        cameraImagePath = dir + File.separator + "CAMERA_" + TimeFormat.formatTime_yyyyMMddHHmmss_line(System.currentTimeMillis()) + ".png";
+                        //文件
+                        File tempFile = new File(cameraImagePath);
+                        if (tempFile != null && data != null) {
+                            final Bitmap rawBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                            Ulog.d("拍照后原数据图 width:" + rawBitmap.getWidth() + "---height:" + rawBitmap.getHeight());
+                            Bitmap resultBitmap = null;
+                            if (!isBackCamera()) {
+                                if (Build.VERSION.SDK_INT == 28) {// android 9   后置方向正、前置正向顺时针旋转90度----Android 9 在设置这个信息时，似乎没有作用
+                                    if (rawBitmap.getWidth() > rawBitmap.getHeight()) {
+                                        resultBitmap = BitmapCameraUtil.mirror(BitmapCameraUtil.rotate(rawBitmap, 270f));  //前置摄像头旋转270°
+                                    } else {
+                                        resultBitmap = BitmapCameraUtil.mirror(rawBitmap);  //前置摄像头旋转270°
+                                    }
+                                } else if (Build.VERSION.SDK_INT <= 27 && Build.VERSION.SDK_INT >= 23) { // android 6.0  后置方向正、前置方向倒
+                                    resultBitmap = BitmapCameraUtil.mirror(BitmapCameraUtil.rotate(rawBitmap, 180f));  //前置摄像头旋转270°
+                                } else if (Build.VERSION.SDK_INT > 28) { // android 9 以上版本暂时按照 Android 9 版本处理
+                                    if (rawBitmap.getWidth() > rawBitmap.getHeight()) {
+                                        resultBitmap = BitmapCameraUtil.mirror(BitmapCameraUtil.rotate(rawBitmap, 270f));  //前置摄像头旋转270°
+                                    } else {
+                                        // todo  实际上这里存在一个 不同系统的兼容问题
+                                        if (((Build.BRAND.toLowerCase().equals("honor") || Build.BRAND.toLowerCase().equals("huawei")) &&
+                                                Build.MODEL.equals("BKL-AL00")) // 荣耀V10  一个需要单独处理的型号
+                                        ) {
+                                            resultBitmap = BitmapCameraUtil.mirror(BitmapCameraUtil.rotate(rawBitmap, 180f));  //前置摄像头旋转270°
+                                        } else {
+                                            resultBitmap = BitmapCameraUtil.mirror(rawBitmap);  //前置摄像头旋转270°
+                                        }
+                                    }
+                                } else {// 5.1   5.0
+                                    resultBitmap = BitmapCameraUtil.mirror(rawBitmap);  //
+                                }
+                            } else {
+                                // 预计优化后的处理方式
+                                if (rawBitmap.getWidth() < rawBitmap.getHeight()) {
+                                    resultBitmap = rawBitmap;  //后置摄像头----不需要再进行旋转了
+                                } else {
+                                    resultBitmap = BitmapCameraUtil.rotate(rawBitmap, 90f);
+                                }
+                            }
+                            fos = new FileOutputStream(tempFile);
+                            fos.write(BitmapCameraUtil.Bitmap2Bytes(resultBitmap, Bitmap.CompressFormat.JPEG, 80));//文件会增大很多，方便验证查看上传进度--- 仍然进行压缩，减少存储的空间【收费模式修改】
+                            fos.flush();
+                            mHandler.sendEmptyMessage(1000);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        mHandler.sendEmptyMessage(1001);
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
+                        mHandler.sendEmptyMessage(1002);
+                    } finally {
+                        if (fos != null) {
+                            try {
+                                fos.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        mHandler.sendEmptyMessage(1003);
+                    }
+                }
+            });
+        }
+    };
+
+    private void takePhoto() {
+        if (mCamera != null) mCamera.takePicture(null, null, mPictureJpegCallback);
+    }
+
+    /*
+     ************************************************************************************************************************************************
+     */
+
+    private void setTextValue(TextView textValue, String value) {
+        if (textValue != null) {
+            textValue.setText(!TextUtils.isEmpty(value) ? value : "");
+        }
     }
 
     /*
@@ -263,6 +404,7 @@ public class Camera1Activity extends BaseActivity {
 
                     }
                 });
+                Ulog.i("执行对焦动作");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -310,6 +452,158 @@ public class Camera1Activity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
             CrashReportUtil.report("设置照片格式异常-", e);
+        }
+    }
+
+    /*
+     ************************************************************************************************************************************************
+     */
+
+    private Camera.Size getPictureSize(boolean isPreview) {
+        try {
+            if (mCamera != null) {
+                Camera.Parameters parameters = mCamera.getParameters();
+                if (parameters == null) {
+                    return null;
+                }
+                List<Camera.Size> list = isPreview ? parameters.getSupportedPreviewSizes() : parameters.getSupportedPictureSizes();
+                int size = list != null ? list.size() : 0;//列表大小
+                for (int i = size - 1; i >= 0; i--) {//删除不合法的对象
+                    if (list.get(i) == null) {
+                        list.remove(i);
+                    }
+                }
+                // 先根据宽排序，宽相等时，根据高排序
+                Collections.sort(list, new Comparator<Camera.Size>() {//将预览的大小按照从大到小的顺序排序
+                    @Override
+                    public int compare(Camera.Size left, Camera.Size right) {
+                        if (left.width > right.width) {
+                            return -1;
+                        } else if (left.width < right.width) {
+                            return 1;
+                        } else {//宽相等
+                            if (left.height > right.height) {
+                                return -1;
+                            } else if (left.height < right.height) {
+                                return 1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    }
+                });
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(isPreview ? "支持的预览大小：" : "支持的拍摄大小：").append("\n");
+                int size2 = list != null ? list.size() : 0;
+                for (int i = 0; i < size2; i++) {
+                    stringBuilder.append("width:").append(list.get(i).width).append("---height:").append(list.get(i).height).append("\n");
+                }
+                Ulog.i(stringBuilder.toString());
+                if (size2 > 0) {
+                    return list.get(0);
+                } else {
+                    return null;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            CrashReportUtil.report("获取支持的照片大小异常-", e);
+        }
+        return null;
+    }
+
+    private Camera.Size getPreviewSizeByShot(Camera.Size pictureSize) {
+        try {
+            if (mCamera != null) {
+                Camera.Parameters parameters = mCamera.getParameters();
+                if (parameters == null) {
+                    return null;
+                }
+                List<Camera.Size> list = parameters.getSupportedPreviewSizes();
+                int size = list != null ? list.size() : 0;//列表大小
+                for (int i = size - 1; i >= 0; i--) {//删除不合法的对象
+                    if (list.get(i) == null) {
+                        list.remove(i);
+                    }
+                }
+                // 先根据宽排序，宽相等时，根据高排序
+                Collections.sort(list, new Comparator<Camera.Size>() {//将预览的大小按照从大到小的顺序排序
+                    @Override
+                    public int compare(Camera.Size left, Camera.Size right) {
+                        if (left.width > right.width) {
+                            return -1;
+                        } else if (left.width < right.width) {
+                            return 1;
+                        } else {//宽相等
+                            if (left.height > right.height) {
+                                return -1;
+                            } else if (left.height < right.height) {
+                                return 1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    }
+                });
+                StringBuilder stringBuilder = new StringBuilder();
+                int size2 = list != null ? list.size() : 0;
+                for (int i = 0; i < size2; i++) {
+                    if (list.get(i).width * pictureSize.height == list.get(i).height * pictureSize.width) {
+                        stringBuilder.append("找到的等比例的预览：").append("width:").append(list.get(i).width).append("---height:").append(list.get(i).height).append("\n");
+                        Ulog.w(stringBuilder.toString());
+                        return list.get(i);
+                    }
+                }
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            CrashReportUtil.report("获取支持的照片大小异常-", e);
+        }
+        return null;
+    }
+
+    private void setPictureSize() {
+        try {
+            if (mCamera != null) {
+                Camera.Parameters parameters = mCamera.getParameters();
+//                Ulog.i("默认拍摄大小：（宽）" + parameters.getPictureSize().width + "---（高）" + parameters.getPictureSize().height);
+//                Ulog.i("默认预览大小：（宽）" + parameters.getPreviewSize().width + "---（高）" + parameters.getPreviewSize().height);
+                Camera.Size size = getPictureSize(false);
+                Camera.Size sizePreview = null;
+                if (size != null) {
+                    sizePreview = getPreviewSizeByShot(size);
+                    setPreviewSize(sizePreview);
+                    parameters.setPictureSize(size.width, size.height);
+                }
+                mCamera.setParameters(parameters);
+                Ulog.e("设置后的大小：（宽）" + size.width + "---（高）" + size.height);
+                if (sizePreview != null) {
+                    Ulog.e("设置后的大小：（宽）" + size.width + "---（高）" + size.height);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            CrashReportUtil.report("设置照片大小异常-", e);
+        }
+    }
+
+    private void setPreviewSize(Camera.Size previewSize) {
+        if (previewSize == null) {
+            Ulog.i("无效的预览大小");
+            return;
+        }
+        try {
+            if (mCamera != null) {
+                if (previewSize != null) {
+                    Camera.Parameters parameters = mCamera.getParameters();
+                    parameters.setPreviewSize(previewSize.width, previewSize.height);
+                    mCamera.setParameters(parameters);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            CrashReportUtil.report("设置预览大小异常-", e);
         }
     }
 
@@ -426,10 +720,12 @@ public class Camera1Activity extends BaseActivity {
                         switch (event.getActionMasked()) {
                             case MotionEvent.ACTION_POINTER_DOWN:
                                 // 判断是否是第2个手指按下
+                                Ulog.i("触摸事件---------多焦点 ACTION_POINTER_DOWN ");
                                 break;
                             case MotionEvent.ACTION_POINTER_UP:
                                 // 判断抬起的手指是否是第2个
                                 distance = 0;// 重置数据，避免上一次的移动影响当当前滑动手势的预期缩放效果
+                                Ulog.i("触摸事件---------多焦点 ACTION_POINTER_UP ");
                                 break;
                             case MotionEvent.ACTION_MOVE:
                                 if (event != null && event.getPointerCount() >= 2) {// 判断当前事件中含有2个或以上手指进行操作
@@ -454,10 +750,12 @@ public class Camera1Activity extends BaseActivity {
                                             // 通过两点间的距离的增减判断应该执行放大，还是缩小
                                             if ((currentDistance - distance) > 0) {
                                                 // 增加缩放倍数
+                                                Ulog.i("触摸事件---------多焦点 zoomPlus ");
                                                 zoomPlus();
                                                 distance = currentDistance;
                                             } else if ((currentDistance - distance) < 0) {
                                                 // 缩小缩放倍数
+                                                Ulog.i("触摸事件---------多焦点 zoomMinus ");
                                                 zoomMinus();
                                                 distance = currentDistance;
                                             }
@@ -472,6 +770,7 @@ public class Camera1Activity extends BaseActivity {
                                 focusTime = System.currentTimeMillis();// 记录当前对焦时间
                                 lastX = event.getX();// 记录当前对焦的位置
                                 lastY = event.getY();
+                                Ulog.i("触摸事件---------单焦点 ACTION_DOWN ");
                                 break;
                             }
                             case MotionEvent.ACTION_MOVE: {
@@ -519,30 +818,22 @@ public class Camera1Activity extends BaseActivity {
                                     }
                                     // 执行对焦操作
                                     doFocusAction();// 触摸手动对焦
-
+                                    Ulog.i("触摸事件---------单焦点 执行对焦 ");
+                                } else {
+                                    Ulog.i("触摸事件---------单焦点 执行对焦【未成功对焦】 ");
                                 }
                                 break;
                             }
                         }
                     }
-                    return false;
+                    return true;// 如果不设置返回值为true，则由于未设置View的其他点击事件，导致View的事件被忽略掉
                 } catch (Exception e) {
                     e.printStackTrace();
                     CrashReportUtil.report("缩放或点击对焦时出现异常【拍照】-", e);
                 }
-                return false;
+                return true;// 如果不设置返回值为true，则由于未设置View的其他点击事件，导致View的事件被忽略掉
             }
         });
-    }
-
-    /*
-     ************************************************************************************************************************************************
-     */
-
-    private void setTextValue(TextView textValue, String value) {
-        if (textValue != null) {
-            textValue.setText(!TextUtils.isEmpty(value) ? value : "");
-        }
     }
 
     /*
@@ -586,7 +877,7 @@ public class Camera1Activity extends BaseActivity {
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
-    private void initCameraDevice(boolean isDoFocus) {
+    private void initCameraDevice(boolean isDoFocus) {// todo 从表现上看，不设置固定的拍摄的大小，反而拍摄效果比较好
         releaseCameraResource();// 先释放相机资源
         try {
             if (CameraCheckUtil.hasBackCamera(BaseApplication.getInstance())) {
@@ -616,11 +907,12 @@ public class Camera1Activity extends BaseActivity {
 
             // 设置闪光灯
             setFlash(FLASH_OFF);
-
             // 设置相机的旋转
             setParameterRotation();
             //设置图片格式
             setPictureFormat();
+            //设置图片大小
+            setPictureSize();
 
             // 执行对焦
             if (isDoFocus) {
@@ -671,6 +963,8 @@ public class Camera1Activity extends BaseActivity {
             setParameterRotation();
             //设置图片格式
             setPictureFormat();
+            //设置图片大小
+            setPictureSize();
 
             // 执行对焦
             if (isDoFocus) {

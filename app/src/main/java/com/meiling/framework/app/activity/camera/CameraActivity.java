@@ -205,7 +205,7 @@ public class CameraActivity extends BaseActivity {
                     .setWheelItemTextSize(18)
                     .setSureTextColor(R.color.color_06c1ae)
                     .setToolBarTextColor(R.color.color_999999)
-                    .setCurrentMillseconds(currentTime)// todo 保证显示的是最后选中的时间--需要在选中后进行更新
+                    .setCurrentMillseconds(currentTime)// todo 保证显示的是最后选中的时间------需要在选中后进行更新
                     .setCyclic(false)// 设置滚动不可循环
                     .setMinMillseconds(minTimestamp)// 设置起始时间
                     .setMaxMillseconds(maxTimestamp)// 设置终止时间

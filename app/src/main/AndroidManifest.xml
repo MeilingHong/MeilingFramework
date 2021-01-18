@@ -36,6 +36,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".activity.camera.CameraPreviewLocalImageActivity" />
         <activity android:name=".activity.system_call.SystemCallActivity" />
+        <activity android:name=".activity.camera.Camera1Activity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

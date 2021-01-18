@@ -5,6 +5,7 @@ package com.meiling.framework.app.activity.camera;
  */
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bm.library.PhotoView;
@@ -20,6 +21,7 @@ import androidx.annotation.Nullable;
  * project MeilingFramework
  */
 public class CameraPreviewLocalImageActivity extends BaseActivity {
+    private ImageView ivComponentActionBarBack;
     private PhotoView previewImage;
     private String mLocalPath;
 
@@ -36,6 +38,13 @@ public class CameraPreviewLocalImageActivity extends BaseActivity {
     @Override
     public void afterSetContentView(@Nullable Bundle savedInstanceState) {
         initParameter();
+        ivComponentActionBarBack = findViewById(R.id.ivComponentActionBarBack);
+        ivComponentActionBarBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         previewImage = findViewById(R.id.previewImage);
         previewImage.enable();// 允许进行缩放
         GlideUtil.loadLocalImage(this, mLocalPath, previewImage);
