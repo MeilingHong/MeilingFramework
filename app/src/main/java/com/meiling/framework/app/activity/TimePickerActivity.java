@@ -1,4 +1,4 @@
-package com.meiling.framework.app.activity.camera;
+package com.meiling.framework.app.activity;
 /**
  * Created by marisareimu@126.com on 2021-01-14  15:58
  * project MeilingFramework
@@ -16,6 +16,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.meiling.framework.app.R;
+import com.meiling.framework.app.activity.camera.Camera1Activity;
+import com.meiling.framework.app.activity.camera.Camera2Activity;
+import com.meiling.framework.app.activity.camera.CameraPreviewLocalImageActivity;
 import com.meiling.framework.app.base.BaseApplication;
 import com.meiling.framework.app.base.IntentParameterKeys;
 import com.meiling.framework.app.dialog.picker.TimePickerDialog;
@@ -41,7 +44,7 @@ import androidx.core.content.FileProvider;
  * Created by huangzhou@ulord.net on 2021-01-14  15:58
  * project MeilingFramework
  */
-public class CameraActivity extends BaseActivity {
+public class TimePickerActivity extends BaseActivity {
 
     private TextView systemCamera;
     private TextView camera1;
@@ -68,21 +71,18 @@ public class CameraActivity extends BaseActivity {
         systemCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openSystemCamera();
             }
         });
         camera1 = findViewById(R.id.camera1);
         camera1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openCamear1();
             }
         });
         camera2 = findViewById(R.id.camera2);
         camera2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openCamear2();
             }
         });
         timepicker = findViewById(R.id.timepicker);
@@ -120,7 +120,7 @@ public class CameraActivity extends BaseActivity {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                     // 如果没有目录，则创建目录
-                    String dir = DirectoryUtil.getExternalDir(CameraActivity.this);
+                    String dir = DirectoryUtil.getExternalDir(TimePickerActivity.this);
                     File nameAuthDir = new File(dir);
                     if (!nameAuthDir.exists()) {
                         nameAuthDir.mkdirs();
@@ -141,7 +141,7 @@ public class CameraActivity extends BaseActivity {
                     }
                     startActivityForResult(takePictureIntent, SYSTEM_CAMERA);
                 } else {
-                    ToastUtil.toastShortCenter(CameraActivity.this, "没有系统相机");
+                    ToastUtil.toastShortCenter(TimePickerActivity.this, "没有系统相机");
                 }
             }
         });
@@ -158,7 +158,7 @@ public class CameraActivity extends BaseActivity {
                     // 如果没有目录，则创建目录
                     skipIntent(null, Camera1Activity.class, CAMERA_1);
                 } else {
-                    ToastUtil.toastShortCenter(CameraActivity.this, "没有系统相机");
+                    ToastUtil.toastShortCenter(TimePickerActivity.this, "没有系统相机");
                 }
             }
         });
@@ -175,7 +175,7 @@ public class CameraActivity extends BaseActivity {
                     // 如果没有目录，则创建目录
                     skipIntent(null, Camera2Activity.class, CAMERA_2);
                 } else {
-                    ToastUtil.toastShortCenter(CameraActivity.this, "没有系统相机");
+                    ToastUtil.toastShortCenter(TimePickerActivity.this, "没有系统相机");
                 }
             }
         });

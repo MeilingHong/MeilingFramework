@@ -11,10 +11,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/CommonActivityTheme_WhiteStatusBar">
+        android:theme="@style/CommonActivityTheme_WhiteStatusBar"
+        android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.camera.CameraActivity"
+            android:name=".activity.video_player.VideoPlayerListActivity"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,10 +34,25 @@
         <activity
             android:name=".activity.a_test.PopupDialogCallActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".activity.camera.CameraPreviewLocalImageActivity" />
-        <activity android:name=".activity.system_call.SystemCallActivity" />
-        <activity android:name=".activity.camera.Camera1Activity" />
+        <activity
+            android:name=".activity.camera.CameraPreviewLocalImageActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.system_call.SystemCallActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.camera.Camera1Activity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <!-- 播放器如果不设置configChanges的话，在进行屏幕方向旋转时，会导致Activity销毁重绘，引起初始设置的方向被重置，无限切方向的问题 -->
+        <activity
+            android:name=".activity.video_player.GSYPlayerActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
+        <meta-data
+            android:name="com.meiling.framework.app.utils.glide.MyGlideModule"
+            android:value="GlideModule" />
+        <!-- 替换Glide对应的实现，使得加载进度（含加载成功、加载失败）能够被观测到 -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.meiling.framework.app.fileprovider"
@@ -47,16 +62,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
-        <!-- 替换Glide对应的实现，使得加载进度（含加载成功、加载失败）能够被观测到 -->
-        <meta-data
-            android:name="com.meiling.framework.app.utils.glide.MyGlideModule"
-            android:value="GlideModule" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
 
 </manifest>
