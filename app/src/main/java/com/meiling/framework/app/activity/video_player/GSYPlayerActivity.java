@@ -21,7 +21,7 @@ import androidx.annotation.Nullable;
  * project MeilingFramework
  */
 public class GSYPlayerActivity extends BaseActivity {
-
+    // 播放没问题，但是View固定，没办法进行自定义
     StandardGSYVideoPlayer videoPlayer;
 
     OrientationUtils orientationUtils;
