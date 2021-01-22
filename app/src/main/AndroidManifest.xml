@@ -14,7 +14,7 @@
         android:theme="@style/CommonActivityTheme_WhiteStatusBar"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.video_player.VideoPlayerListActivity"
+            android:name=".activity.video_player.CustomGSYPlayerActivity"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

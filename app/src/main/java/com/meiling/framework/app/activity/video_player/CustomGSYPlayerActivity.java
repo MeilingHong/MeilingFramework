@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.meiling.framework.app.R;
+import com.meiling.framework.app.widget.player.CustomGSYVideoPlayer;
 import com.meiling.framework.base_activity.BaseActivity;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
@@ -19,11 +20,13 @@ import androidx.annotation.Nullable;
 /**
  * 用于自定义播放器UI
  *
+ * 如需要自定义可通过继承播放器后，返回自定义布局或重载接口实现
+ *
  * https://github.com/CarGuo/GSYVideoPlayer/blob/master/app/src/main/java/com/example/gsyvideoplayer/video/SampleCoverVideo.java
  */
 public class CustomGSYPlayerActivity extends BaseActivity {
 
-    StandardGSYVideoPlayer videoPlayer;
+    CustomGSYVideoPlayer videoPlayer;
 
     OrientationUtils orientationUtils;
 
@@ -34,12 +37,12 @@ public class CustomGSYPlayerActivity extends BaseActivity {
 
     @Override
     public int getContentViewLayoutId() {
-        return R.layout.activity_gsyplayer;
+        return R.layout.activity_custom_gsyplayer;
     }
 
     @Override
     public void afterSetContentView(@Nullable Bundle savedInstanceState) {
-        videoPlayer =  (StandardGSYVideoPlayer)findViewById(R.id.video_player);
+        videoPlayer =  (CustomGSYVideoPlayer)findViewById(R.id.video_player);
 
         String source1 = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
         videoPlayer.setUp(source1, true, "测试视频");
