@@ -26,6 +26,12 @@ public class PickerConfig {
     public int mWheelTVSelectorColor = DefaultConfig.TV_SELECTOR_COLOR;
     public int mWheelTVSize = DefaultConfig.TV_SIZE;
     public boolean cyclic = DefaultConfig.CYCLIC;
+    public boolean cyclicYear = DefaultConfig.UNCYCLIC;
+    public boolean cyclicMonth = DefaultConfig.UNCYCLIC;
+    public boolean cyclicDay = DefaultConfig.UNCYCLIC;
+    public boolean cyclicHour = DefaultConfig.UNCYCLIC;
+    public boolean cyclicMinute = DefaultConfig.UNCYCLIC;
+    public boolean cyclicSecond = DefaultConfig.UNCYCLIC;
 
     public String mYear = DefaultConfig.YEAR;
     public String mMonth = DefaultConfig.MONTH;

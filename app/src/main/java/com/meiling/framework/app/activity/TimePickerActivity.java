@@ -110,78 +110,6 @@ public class TimePickerActivity extends BaseActivity {
 
     }
 
-    private String cameraImagePath;
-
-    private void openSystemCamera() {
-        PermissionHelper permissionHelper = new PermissionHelper();
-        permissionHelper.setResult(new PermissionHelper.PermissionResult() {
-            @Override
-            public void success() {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    // 如果没有目录，则创建目录
-                    String dir = DirectoryUtil.getExternalDir(TimePickerActivity.this);
-                    File nameAuthDir = new File(dir);
-                    if (!nameAuthDir.exists()) {
-                        nameAuthDir.mkdirs();
-                    }
-                    String cameraTempFileString = dir + File.separator + TimeFormat.formatTime_yyyyMMddHHmmss_line(System.currentTimeMillis()) + ".png";
-                    File cameraTempFile = new File(cameraTempFileString);
-                    cameraImagePath = cameraTempFileString;
-                    // 方式1
-                    Uri imageUri = FileProvider.getUriForFile(BaseApplication.getInstance(), "com.meiling.framework.app.fileprovider", cameraTempFile);
-                    // 方式2
-//                     Uri imageUri = Uri.fromFile(cameraTempFile);
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    List<ResolveInfo> resInfoList = getPackageManager().queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
-                    for (ResolveInfo resolveInfo : resInfoList) {
-                        String packageName = resolveInfo.activityInfo.packageName;
-                        grantUriPermission(packageName, imageUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    }
-                    startActivityForResult(takePictureIntent, SYSTEM_CAMERA);
-                } else {
-                    ToastUtil.toastShortCenter(TimePickerActivity.this, "没有系统相机");
-                }
-            }
-        });
-        permissionHelper.requestPermission(this, PermissionType.TYPE_CAMERA_STORAGE);
-    }
-
-    private void openCamear1() {
-        PermissionHelper permissionHelper = new PermissionHelper();
-        permissionHelper.setResult(new PermissionHelper.PermissionResult() {
-            @Override
-            public void success() {
-                if (CameraCheckUtil.hasBackCamera(BaseApplication.getInstance()) ||
-                        CameraCheckUtil.hasFrontCamera(BaseApplication.getInstance())) {
-                    // 如果没有目录，则创建目录
-                    skipIntent(null, Camera1Activity.class, CAMERA_1);
-                } else {
-                    ToastUtil.toastShortCenter(TimePickerActivity.this, "没有系统相机");
-                }
-            }
-        });
-        permissionHelper.requestPermission(this, PermissionType.TYPE_CAMERA_STORAGE);
-    }
-
-    private void openCamear2() {
-        PermissionHelper permissionHelper = new PermissionHelper();
-        permissionHelper.setResult(new PermissionHelper.PermissionResult() {
-            @Override
-            public void success() {
-                if (CameraCheckUtil.hasBackCamera(BaseApplication.getInstance()) ||
-                        CameraCheckUtil.hasFrontCamera(BaseApplication.getInstance())) {
-                    // 如果没有目录，则创建目录
-                    skipIntent(null, Camera2Activity.class, CAMERA_2);
-                } else {
-                    ToastUtil.toastShortCenter(TimePickerActivity.this, "没有系统相机");
-                }
-            }
-        });
-        permissionHelper.requestPermission(this, PermissionType.TYPE_CAMERA_STORAGE);
-    }
-
     private long currentTime;
     private TimePickerDialog mDialogTime;
 
@@ -211,7 +139,14 @@ public class TimePickerActivity extends BaseActivity {
                     .setSureTextColor(R.color.color_06c1ae)
                     .setToolBarTextColor(R.color.color_999999)
                     .setCurrentMillseconds(currentTime)// todo 保证显示的是最后选中的时间------需要在选中后进行更新
-                    .setCyclic(false)// 设置滚动不可循环
+                    .setCyclic(false)// 设置滚动不可循环【全局的循环开关】
+                    // 参数自定义
+                    .setCyclicYear(true)
+                    .setCyclicMonth(false)
+                    .setCyclicDay(true)
+                    .setCyclicHour(false)
+                    .setCyclicMinute(true)
+
                     .setMinMillseconds(minTimestamp)// 设置起始时间
                     .setMaxMillseconds(maxTimestamp)// 设置终止时间
                     .setWheelItemTextNormalColor(Color.parseColor("#999999"))// 未选中的文字颜色
@@ -241,38 +176,10 @@ public class TimePickerActivity extends BaseActivity {
         }
     }
 
-    private void toLocalPreview(String cameraImagePath) {
-        Bundle bundle = new Bundle();
-        bundle.putString(IntentParameterKeys.image_path, cameraImagePath);
-        skipIntent(bundle, CameraPreviewLocalImageActivity.class, -1);
-    }
-
-    private final int SYSTEM_CAMERA = 1000;
-    private final int CAMERA_1 = 1001;
-    private final int CAMERA_2 = 1002;
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case SYSTEM_CAMERA: {// 系统相机回调
-                if (resultCode == RESULT_OK) {
-                    toLocalPreview(cameraImagePath);
-                }
-                break;
-            }
-            case CAMERA_1: {
-                if (resultCode == RESULT_OK && data != null && !TextUtils.isEmpty(data.getStringExtra(IntentParameterKeys.image_path))) {
-                    toLocalPreview(data.getStringExtra(IntentParameterKeys.image_path));
-                }
-                break;
-            }
-            case CAMERA_2: {
-                if (resultCode == RESULT_OK && data != null && !TextUtils.isEmpty(data.getStringExtra(IntentParameterKeys.image_path))) {
-                    toLocalPreview(data.getStringExtra(IntentParameterKeys.image_path));
-                }
-                break;
-            }
         }
     }
 }

@@ -31,7 +31,7 @@ import androidx.fragment.app.DialogFragment;
  * Created by RuanCaiPu on 2017/9/1.
  */
 public class TimePickerDialog extends DialogFragment implements View.OnClickListener {
-    PickerConfig mPickerConfig;
+    private PickerConfig mPickerConfig;
     private TimeWheel mTimeWheel;
     private long mCurrentMillSeconds;
 
@@ -84,9 +84,9 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         return dialog;
     }
 
-    View initView() {
+    private View initView() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View view = inflater.inflate(R.layout.timepicker_layout, null);
+        View view = inflater.inflate(R.layout.timepicker_layout, null);// todo 实际示例化的View
         TextView cancel = (TextView) view.findViewById(R.id.tv_cancel);
         cancel.setOnClickListener(this);
         TextView sure = (TextView) view.findViewById(R.id.tv_sure);
@@ -96,8 +96,8 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
         title.setText(mPickerConfig.mTitleString);
         cancel.setText(mPickerConfig.mCancelString);
         sure.setText(mPickerConfig.mSureString);
-//        toolbar.setBackgroundColor(mPickerConfig.mThemeColor);
-//        title.setTextColor(mPickerConfig.mToolBarTVColor);
+        toolbar.setBackgroundColor(mPickerConfig.mThemeColor);
+        title.setTextColor(mPickerConfig.mToolBarTVColor);
         cancel.setTextColor(mPickerConfig.mCancelTextColor);
         sure.setTextColor(mPickerConfig.mSureTextColor);
         mTimeWheel = new TimeWheel(view, mPickerConfig);
@@ -235,6 +235,46 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
             return this;
         }
 
+        /**
+         ****************************************************************************************************************
+         * 设置单独的循环
+         */
+
+        public Builder setCyclicYear(boolean cyclic) {
+            mPickerConfig.cyclicYear = cyclic;
+            return this;
+        }
+
+        public Builder setCyclicMonth(boolean cyclic) {
+            mPickerConfig.cyclicMonth = cyclic;
+            return this;
+        }
+
+        public Builder setCyclicDay(boolean cyclic) {
+            mPickerConfig.cyclicDay = cyclic;
+            return this;
+        }
+
+        public Builder setCyclicHour(boolean cyclic) {
+            mPickerConfig.cyclicHour = cyclic;
+            return this;
+        }
+
+        public Builder setCyclicMinute(boolean cyclic) {
+            mPickerConfig.cyclicMinute = cyclic;
+            return this;
+        }
+
+        public Builder setCyclicSecond(boolean cyclic) {
+            mPickerConfig.cyclicSecond = cyclic;
+            return this;
+        }
+
+        /**
+         ****************************************************************************************************************
+         * 设置上限和下限
+         */
+
         public Builder setMinMillseconds(long millseconds) {
             mPickerConfig.mMinCalendar = new WheelCalendar(millseconds);
             return this;
@@ -245,10 +285,18 @@ public class TimePickerDialog extends DialogFragment implements View.OnClickList
             return this;
         }
 
+        /**
+         ****************************************************************************************************************
+         * 设置当前显示的时间
+         */
+
         public Builder setCurrentMillseconds(long millseconds) {
             mPickerConfig.mCurrentCalendar = new WheelCalendar(millseconds);
             return this;
         }
+        /**
+         ****************************************************************************************************************
+         */
 
         public Builder setYearText(String year) {
             mPickerConfig.mYear = year;

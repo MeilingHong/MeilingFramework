@@ -8,10 +8,19 @@ package com.meiling.framework.app.dialog.picker.data;
 public enum Type {
 
     ALL,
-    YEAR_MONTH_DAY,
+
+    HOURS_MINS_SECOND,
     HOURS_MINS,
+
+    MONTH_DAY_HOUR_MIN_SECOND,
     MONTH_DAY_HOUR_MIN,
+
+    YEAR_MONTH_DAY_HOUR_MIN_SECOND,
+    YEAR_MONTH_DAY_HOUR_MIN,
+
+    YEAR_MONTH_DAY,
     YEAR_MONTH,
     YEAR,
+
     OTHER
 }

@@ -101,10 +101,12 @@
         android:layout_marginLeft="6dp"
         android:layout_marginTop="6dp"
         android:visibility="gone" />
+
     <com.meiling.framework.app.widget.status.StatusLayout
         android:id="@+id/status_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
     <LinearLayout
         android:id="@+id/layout_top"
         android:layout_width="match_parent"
@@ -152,7 +154,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical" />
-
 
     <ImageView
         android:id="@+id/small_close"

@@ -31,13 +31,13 @@ public class TimeWheel {
     OnWheelChangedListener yearListener = new OnWheelChangedListener() {
         @Override
         public void onChanged(WheelView wheel, int oldValue, int newValue) {
-            updateMonths();
+            updateMonths();//todo 当年的值进行变化时，更新月的值，级联更新数据
         }
     };
     OnWheelChangedListener monthListener = new OnWheelChangedListener() {
         @Override
         public void onChanged(WheelView wheel, int oldValue, int newValue) {
-            updateDays();
+            updateDays();//todo 当月的值进行变化时，更新日的值，级联更新数据
         }
     };
     OnWheelChangedListener dayListener = new OnWheelChangedListener() {
@@ -122,6 +122,7 @@ public class TimeWheel {
         mYearAdapter.setConfig(mPickerConfig);
         year.setViewAdapter(mYearAdapter);
         year.setCurrentItem(mRepository.getDefaultCalendar().year - minYear);
+        year.setCyclic(mPickerConfig.cyclic || mPickerConfig.cyclicYear);
     }
 
     void initMonth() {
@@ -129,7 +130,7 @@ public class TimeWheel {
         int curYear = getCurrentYear();
         int minMonth = mRepository.getMinMonth(curYear);
         month.setCurrentItem(mRepository.getDefaultCalendar().month - minMonth);
-        month.setCyclic(mPickerConfig.cyclic);
+        month.setCyclic(mPickerConfig.cyclic || mPickerConfig.cyclicMonth);
     }
 
     void initDay() {
@@ -139,7 +140,7 @@ public class TimeWheel {
 
         int minDay = mRepository.getMinDay(curYear, curMonth);
         day.setCurrentItem(mRepository.getDefaultCalendar().day - minDay);
-        day.setCyclic(mPickerConfig.cyclic);
+        day.setCyclic(mPickerConfig.cyclic || mPickerConfig.cyclicDay);
     }
 
     void initHour() {
@@ -150,7 +151,7 @@ public class TimeWheel {
 
         int minHour = mRepository.getMinHour(curYear, curMonth, curDay);
         hour.setCurrentItem(mRepository.getDefaultCalendar().hour - minHour);
-        hour.setCyclic(mPickerConfig.cyclic);
+        hour.setCyclic(mPickerConfig.cyclic || mPickerConfig.cyclicHour);
     }
 
     void initMinute() {
@@ -162,7 +163,7 @@ public class TimeWheel {
         int minMinute = mRepository.getMinMinute(curYear, curMonth, curDay, curHour);
 
         minute.setCurrentItem(mRepository.getDefaultCalendar().minute - minMinute);
-        minute.setCyclic(mPickerConfig.cyclic);
+        minute.setCyclic(mPickerConfig.cyclic || mPickerConfig.cyclicMinute);
 
     }
 

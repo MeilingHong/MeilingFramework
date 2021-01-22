@@ -16,6 +16,7 @@ public class DefaultConfig {
     public static final int TV_SELECTOR_COLOR = 0XFF404040;
     public static final int TV_SIZE = 12;
     public static final boolean CYCLIC = true;
+    public static final boolean UNCYCLIC = false;
     public static String CANCEL = "取消";
     public static String SURE = "确定";
     public static String TITLE = "TimePicker";
