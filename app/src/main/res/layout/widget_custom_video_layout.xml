@@ -65,8 +65,8 @@
             android:minHeight="4dp"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
-            android:progressDrawable="@drawable/video_seek_progress"
-            android:thumb="@drawable/video_seek_thumb" />
+            android:progressDrawable="@drawable/seekbar_thumb_white_progress"
+            android:thumb="@drawable/seekbar_thumb_white" />
 
         <TextView
             android:id="@+id/total"
@@ -84,7 +84,9 @@
             android:scaleType="center"
             android:src="@drawable/video_enlarge" />
     </LinearLayout>
-
+    <!--
+    底部进度条，当拖动条不显示时，进度条显示
+    -->
     <ProgressBar
         android:id="@+id/bottom_progressbar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -92,7 +94,7 @@
         android:layout_height="1.5dp"
         android:layout_alignParentBottom="true"
         android:max="100"
-        android:progressDrawable="@drawable/video_progress" />
+        android:progressDrawable="@drawable/seekbar_thumb_white_progress" />
 
     <ImageView
         android:id="@+id/back_tiny"

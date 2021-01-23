@@ -7,26 +7,30 @@ package com.meiling.framework.app.activity.video_player;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.meiling.framework.app.R;
 import com.meiling.framework.app.widget.player.CustomGSYVideoPlayer;
 import com.meiling.framework.base_activity.BaseActivity;
+import com.meiling.framework.common_util.log.Ulog;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
-import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import androidx.annotation.Nullable;
 
 /**
  * 用于自定义播放器UI
- *
+ * <p>
  * 如需要自定义可通过继承播放器后，返回自定义布局或重载接口实现
- *
+ * <p>
  * https://github.com/CarGuo/GSYVideoPlayer/blob/master/app/src/main/java/com/example/gsyvideoplayer/video/SampleCoverVideo.java
  */
 public class CustomGSYPlayerActivity extends BaseActivity {
 
-    CustomGSYVideoPlayer videoPlayer;
+    private TextView transform;
+    private TextView rotation;
+    private TextView rotationValue;
+    private CustomGSYVideoPlayer videoPlayer;
 
     OrientationUtils orientationUtils;
 
@@ -40,11 +44,57 @@ public class CustomGSYPlayerActivity extends BaseActivity {
         return R.layout.activity_custom_gsyplayer;
     }
 
+    /**
+     * 1、缓存文件
+     * 2、
+     */
     @Override
     public void afterSetContentView(@Nullable Bundle savedInstanceState) {
-        videoPlayer =  (CustomGSYVideoPlayer)findViewById(R.id.video_player);
+        videoPlayer = (CustomGSYVideoPlayer) findViewById(R.id.video_player);
+        transform = findViewById(R.id.transform);
+        transform.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (videoPlayer != null) {
+                    videoPlayer.transform();
+                    switch (videoPlayer.getTransformSize()) {
+                        case 0: {
+                            if (transform != null) transform.setText("旋转镜像");
+                            break;
+                        }
+                        case 1: {
+                            if (transform != null) transform.setText("左右镜像");
+                            break;
+                        }
+                        case 2: {
+                            if (transform != null) transform.setText("上下镜像");
+                            break;
+                        }
+                    }
+                }
+            }
+        });
 
-        String source1 = "http://9890.vod.myqcloud.com/9890_4e292f9a3dd011e6b4078980237cc3d3.f20.mp4";
+        rotation = findViewById(R.id.rotation);
+        rotation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (videoPlayer != null) {
+                    videoPlayer.rotation();
+                }
+            }
+        });
+        rotationValue = findViewById(R.id.rotationValue);
+        rotationValue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (videoPlayer != null) {
+                    Ulog.w("当前画面旋转角度:" + videoPlayer.getVideoRotation());// todo 从值看，这个值就是视频拍摄时旋转的角度
+                }
+            }
+        });
+
+        String source1 = "https://test-ubq.obs.cn-south-1.myhuaweicloud.com:443/obs_788803068900001610694078_pre?AccessKeyId=KEYCR8EAOKDERNDWC5UL&Expires=1611386683&Signature=YzFtKq3qXpYgpGP76pPaqUuKL2Q%3D";
         videoPlayer.setUp(source1, true, "测试视频");
 
         //增加title
