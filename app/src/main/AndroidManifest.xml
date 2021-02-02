@@ -2,8 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.meiling.framework.app">
 
-    <!-- bugly 上传文本似乎是使用的HTTP，所以需要声明允许使用明文传输
-    android:usesCleartextTraffic="true" -->
+    <!--
+
+    todo android:usesCleartextTraffic="true"
+        bugly 上传文本似乎是使用的HTTP，所以需要声明允许使用明文传输
+        -->
     <application
         android:name=".base.BaseApplication"
         android:allowBackup="true"
@@ -44,11 +47,16 @@
         <activity
             android:name=".activity.camera.Camera1Activity"
             android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.camera.Camera2Activity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <!-- 播放器如果不设置configChanges的话，在进行屏幕方向旋转时，会导致Activity销毁重绘，引起初始设置的方向被重置，无限切方向的问题 -->
         <activity
             android:name=".activity.video_player.GSYPlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
+
 
         <meta-data
             android:name="com.meiling.framework.app.utils.glide.MyGlideModule"
