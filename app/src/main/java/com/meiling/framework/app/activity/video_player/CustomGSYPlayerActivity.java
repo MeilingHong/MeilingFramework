@@ -31,8 +31,7 @@ public class CustomGSYPlayerActivity extends BaseActivity {
     private TextView rotation;
     private TextView rotationValue;
     private CustomGSYVideoPlayer videoPlayer;
-
-    OrientationUtils orientationUtils;
+    private OrientationUtils orientationUtils;
 
     @Override
     public void configActivity() {
@@ -93,10 +92,10 @@ public class CustomGSYPlayerActivity extends BaseActivity {
                 }
             }
         });
-
-        String source1 = "https://test-ubq.obs.cn-south-1.myhuaweicloud.com:443/obs_788803068900001610694078_pre?AccessKeyId=KEYCR8EAOKDERNDWC5UL&Expires=1611386683&Signature=YzFtKq3qXpYgpGP76pPaqUuKL2Q%3D";
-        videoPlayer.setUp(source1, true, "测试视频");
-
+        // 当文件较大（3:00:00）  2GB以上
+        String source1 = "https://test-ubq.obs.cn-south-1.myhuaweicloud.com/obs_788805985600001610170926_pre?AccessKeyId=KEYCR8EAOKDERNDWC5UL&Expires=1611585592&Signature=tUanT5yaSLY82CXuHyURmwnzlU8%3D";
+        videoPlayer.setUp(source1, false, "测试视频");// 大文件情况下，不能够使用缓冲方式进行预览，否则将会出错
+//        videoPlayer.setUp(source1, true, "测试视频");//大文件，该参数似乎无法进行预览
         //增加title
         videoPlayer.getTitleTextView().setVisibility(View.VISIBLE);
         //设置返回键

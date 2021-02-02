@@ -55,6 +55,17 @@
         android:textColor="@color/color_ffffff"
         android:textSize="14sp" />
 
+    <TextView
+        android:id="@+id/switchCameraIndex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/doShot"
+        android:background="#16000000"
+        android:padding="@dimen/dp6"
+        android:text="切摄像头"
+        android:textColor="@color/color_ffffff"
+        android:textSize="14sp" />
+
     <include
         android:id="@+id/componentActionBar"
         layout="@layout/component_action_bar_000000_alpha_30"

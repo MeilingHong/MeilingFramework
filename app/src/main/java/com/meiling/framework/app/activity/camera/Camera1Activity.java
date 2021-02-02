@@ -49,13 +49,16 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+/**
+ * 使用最原始的方式获取，虽然调用方便，但不够通用，针对多摄像头的情况并不能够很好的进行处理
+ */
 public class Camera1Activity extends BaseActivity {
-
     private ImageView ivComponentActionBarBack;
     private SurfaceView shotSvPreview;
     private TextView switchCamera;
     private TextView switchFlash;
     private TextView doShot;
+    private TextView switchCameraIndex;
     private RelativeLayout shotRlFocusBg;
     private View shotRlFocusIcon;
 
@@ -93,6 +96,7 @@ public class Camera1Activity extends BaseActivity {
         switchCamera = findViewById(R.id.switchCamera);
         switchFlash = findViewById(R.id.switchFlash);
         doShot = findViewById(R.id.doShot);
+        switchCameraIndex = findViewById(R.id.switchCameraIndex);
         shotRlFocusBg = findViewById(R.id.shotRlFocusBg);
         shotRlFocusIcon = findViewById(R.id.shotRlFocusIcon);
     }
@@ -108,7 +112,21 @@ public class Camera1Activity extends BaseActivity {
         switchCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (isBackCamera) {
+                    initCameraDevice(true, false, false);// 切换摄像头【前置】
+                } else {
+                    initCameraDevice(true, true, false);// 切换摄像头【后置】
+                }
+            }
+        });
+        switchCameraIndex.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isBackCamera) {
+                    initCameraDevice(true, true, true);// 切换摄像头【后置】
+                } else {
+                    initCameraDevice(true, false, true);// 切换摄像头【前置】
+                }
             }
         });
         // 切换闪光灯状态
@@ -298,7 +316,7 @@ public class Camera1Activity extends BaseActivity {
                 if (CameraCheckUtil.hasBackCamera(BaseApplication.getInstance()) ||
                         CameraCheckUtil.hasFrontCamera(BaseApplication.getInstance())) {
                     // todo 可以执行拍照
-                    initCameraDevice(false);
+                    initCameraDevice(true, true, false);
                 } else {
                     finish();
                     ToastUtil.toastShortCenter(Camera1Activity.this, "无相机硬件无法执行拍照需求");
@@ -457,6 +475,7 @@ public class Camera1Activity extends BaseActivity {
 
     /*
      ************************************************************************************************************************************************
+     * 获取对应的拍照图片大小，预览大小
      */
 
     private Camera.Size getPictureSize(boolean isPreview) {
@@ -873,69 +892,94 @@ public class Camera1Activity extends BaseActivity {
     /*
      ************************************************************************************************************************************************
      */
+    private int mCamId = -1;
+
+    private Camera openDifferentCamera(boolean isOpenBackCamera) {// 与上一次不同的摄像头
+        releaseCameraResource();
+        Camera.CameraInfo currentCameraInfo = new Camera.CameraInfo();
+        int cameraNumbers = Camera.getNumberOfCameras();// 标记摄像头的总数
+        Ulog.e("openDifferentCamera--cameraNumbers：" + cameraNumbers);
+        int backCameraIndex = -1;// 后置摄像头需要
+        int frontCameraIndex = -1;
+
+        for (int cameraIndex = 0; cameraIndex < cameraNumbers; ++cameraIndex) {
+            Camera.getCameraInfo(cameraIndex, currentCameraInfo);
+            Ulog.e("openDifferentCamera--(currentCameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK)：" + (currentCameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) + "-----" + currentCameraInfo.facing);
+            if (isOpenBackCamera) {
+                if (currentCameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK && mCamId != cameraIndex) {//保证获取的不是当前
+                    backCameraIndex = cameraIndex;
+                    break;
+                }
+            } else {
+                if (currentCameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT && mCamId != cameraIndex) {
+                    frontCameraIndex = cameraIndex;
+                    break;
+                }
+            }
+        }
+        Ulog.w("openDifferentCamera--backCameraIndex:" + backCameraIndex + "---frontCameraIndex:" + frontCameraIndex);
+        if (isOpenBackCamera && backCameraIndex != -1) {
+            this.mCamId = backCameraIndex;
+        } else if (!isOpenBackCamera && frontCameraIndex != -1) {
+            this.mCamId = frontCameraIndex;
+        } else {
+            Ulog.e("openDifferentCamera--openCamera failed! ");
+        }
+        Ulog.w("openDifferentCamera--isOpenBackCamera:" + isOpenBackCamera + "---mCamId:" + mCamId);
+        Camera var1 = Camera.open(this.mCamId);
+        return var1;
+    }
+
+    private Camera openSameCamera(boolean isOpenBackCamera) {// 与上一次不同的摄像头
+        releaseCameraResource();
+        Camera.CameraInfo currentCameraInfo = new Camera.CameraInfo();
+        int cameraNumbers = Camera.getNumberOfCameras();// 标记摄像头的总数
+        Ulog.e("openSameCamera--cameraNumbers：" + cameraNumbers);
+        int backCameraIndex = -1;// 后置摄像头需要
+        int frontCameraIndex = -1;
+        for (int cameraIndex = 0; cameraIndex < cameraNumbers; ++cameraIndex) {
+            Camera.getCameraInfo(cameraIndex, currentCameraInfo);
+            Ulog.e("openSameCamera--(currentCameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK)：" + (currentCameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) + "-----" + currentCameraInfo.facing);
+            if (isOpenBackCamera) {
+                if (currentCameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {//保证获取的不是当前
+                    backCameraIndex = cameraIndex;
+                    break;
+                }
+            } else {
+                if (currentCameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                    frontCameraIndex = cameraIndex;
+                    break;
+                }
+            }
+        }
+        Ulog.w("openSameCamera--backCameraIndex:" + backCameraIndex + "---frontCameraIndex:" + frontCameraIndex);
+        if (isOpenBackCamera && backCameraIndex != -1) {
+            this.mCamId = backCameraIndex;
+        } else if (!isOpenBackCamera && frontCameraIndex != -1) {
+            this.mCamId = frontCameraIndex;
+        } else {
+            Ulog.e("openSameCamera--openCamera failed! ");
+        }
+        Ulog.w("openSameCamera--isOpenBackCamera:" + isOpenBackCamera + "---mCamId:" + mCamId);
+        Camera var1 = Camera.open(this.mCamId);
+        return var1;
+    }
+
+    /*
+     ************************************************************************************************************************************************
+     */
 
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
-    private void initCameraDevice(boolean isDoFocus) {// todo 从表现上看，不设置固定的拍摄的大小，反而拍摄效果比较好
-        releaseCameraResource();// 先释放相机资源
-        try {
-            if (CameraCheckUtil.hasBackCamera(BaseApplication.getInstance())) {
-                mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);//todo 设置为后置摄像头
-                isBackCamera = true;
-            } else if (CameraCheckUtil.hasFrontCamera(BaseApplication.getInstance())) {
-                mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);//todo 设置为前置摄像头
-                isBackCamera = false;
-            } else {
-                finish();
-            }
-            if (mHolder == null) {
-                if (shotSvPreview == null) {
-                    shotSvPreview = (SurfaceView) findViewById(R.id.shotSvPreview);
-                }
-                mHolder = shotSvPreview.getHolder();
-                mHolder.addCallback(mCallback);
-                mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-            }
-
-            //设置预览方向【默认摄像头是横拍】
-            mCamera.setDisplayOrientation(90);
-            //把这个预览效果展示在SurfaceView上面
-            mCamera.setPreviewDisplay(mHolder);
-            //开启预览效果
-            mCamera.startPreview();
-
-            // 设置闪光灯
-            setFlash(FLASH_OFF);
-            // 设置相机的旋转
-            setParameterRotation();
-            //设置图片格式
-            setPictureFormat();
-            //设置图片大小
-            setPictureSize();
-
-            // 执行对焦
-            if (isDoFocus) {
-                // 执行对焦，onCreate方法内执行对焦其实不会有作用，需要等到页面完全显示之后，执行对焦才会真正生效
-                // 这个执行在onWindowFocusChange方法中执行会比较好
-                doFocusAction();
-            }
-
-            // 设置初始的缩放倍数
-            setZoom(lastZoom);
-        } catch (Exception e) {
-            CrashReportUtil.report("初始化相机异常-", e);
-        }
-    }
-
-    private void switchCameraDevice(boolean isBack, boolean isDoFocus) {
+    private void initCameraDevice(boolean isDoFocus, boolean isBack, boolean isSwitch) {// todo 从表现上看，不设置固定的拍摄的大小，反而拍摄效果比较好
         releaseCameraResource();// 先释放相机资源
         try {
             if (isBack && CameraCheckUtil.hasBackCamera(BaseApplication.getInstance())) {
-                mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);//todo 设置为后置摄像头
+                mCamera = isSwitch ? openDifferentCamera(true) : openSameCamera(true);//todo 设置为后置摄像头
                 isBackCamera = true;
             } else if (!isBack && CameraCheckUtil.hasFrontCamera(BaseApplication.getInstance())) {
-                mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);//todo 设置为前置摄像头
+                mCamera = isSwitch ? openDifferentCamera(true) : openSameCamera(false);//todo 设置为前置摄像头
                 isBackCamera = false;
             } else {
                 finish();
@@ -958,7 +1002,6 @@ public class Camera1Activity extends BaseActivity {
 
             // 设置闪光灯
             setFlash(FLASH_OFF);
-
             // 设置相机的旋转
             setParameterRotation();
             //设置图片格式
@@ -968,9 +1011,16 @@ public class Camera1Activity extends BaseActivity {
 
             // 执行对焦
             if (isDoFocus) {
-                // 执行对焦，onCreate方法内执行对焦其实不会有作用，需要等到页面完全显示之后，执行对焦才会真正生效
+                // 执行对焦，onCreate方法内执行对焦其实不会有作用，需要等到页面完全显示之后，执行对焦才会真正生效【另一种方式时在延迟之后再调用这个对焦方法让它生效】
                 // 这个执行在onWindowFocusChange方法中执行会比较好
-                doFocusAction();
+                if (mHandler != null) {
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            doFocusAction();
+                        }
+                    }, 1000);
+                }
             }
 
             // 设置初始的缩放倍数
@@ -983,6 +1033,5 @@ public class Camera1Activity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switchCameraDevice(isBackCamera, false);// 避免类似三星这种在跳转页面后释放掉设备的情况出现
     }
 }
