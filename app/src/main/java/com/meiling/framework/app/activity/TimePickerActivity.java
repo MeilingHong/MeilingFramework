@@ -114,8 +114,10 @@ public class TimePickerActivity extends BaseActivity {
     private TimePickerDialog mDialogTime;
 
     /**
-     * todo 优化点：
+     * todo 优化点：【其实整个TimePicker的耦合程度过高，这种设计不合理】
      *  1、年月日时分秒都进行是否循环的参数化
+     *  2、整个配置类跟WheelView的耦合过于严重
+     *  3、WheelView针对选中的View和未选中View的区分上还可以通过设置进行拆分
      */
 
     private void openTimePicker() {
