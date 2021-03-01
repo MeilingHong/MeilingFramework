@@ -115,7 +115,8 @@ public class HistoryTagLayout extends ViewGroup {
         height += lineHeight;
         sizeHeight += topPadding + bottomPadding;
         height += topPadding + bottomPadding;
-        setMeasuredDimension((modeWidth == MeasureSpec.EXACTLY) ? sizeWidth : width, (modeHeight == MeasureSpec.EXACTLY) ? sizeHeight : height);
+        // todo 这里宽度只能赋值为最大值否则添加的子View会先显示的排列与预期不一致问题【因为这里设置宽度后会影响到后续的添加子View是计算宽度的问题】
+        setMeasuredDimension((modeWidth == MeasureSpec.EXACTLY) ? sizeWidth : sizeWidth, (modeHeight == MeasureSpec.EXACTLY) ? sizeHeight : height);
 //        setMeasuredDimension((modeWidth == MeasureSpec.EXACTLY) ? width : width, (modeHeight == MeasureSpec.EXACTLY) ? sizeHeight : height);
     }
 
